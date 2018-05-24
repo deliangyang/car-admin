@@ -167,6 +167,13 @@ export const appRouter = [
                 name: 'split-pane-page',
                 title: 'split-pane',
                 component: () => import('@/views/my-components/split-pane/split-pane-page.vue')
+            },
+            {
+                path: 'article-list-page',
+                icon: 'ios-pause',
+                name: 'article-list-page',
+                title: '文章列表页',
+                component: () => import('@/views/article/list.vue')
             }
         ]
     },
