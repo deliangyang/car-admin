@@ -18,9 +18,6 @@ let vueAxios = axios.create({
     timeout: 1000,
     headers: {}
 })
-vueAxios.get('/ping').then((res) => {
-    console.log(res)
-})
 Vue.prototype.$axios = vueAxios
 
 new Vue({
