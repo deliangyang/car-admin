@@ -14,7 +14,7 @@ Vue.use(VueI18n);
 Vue.use(iView);
 
 let vueAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'https://xcx.sourcedev.cc/',
     timeout: 1000,
     headers: {}
 })
