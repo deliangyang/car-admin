@@ -111,13 +111,6 @@ export const appRouter = [
                 title: '用户列表',
                 component: () => import('@/views/module/user/list.vue')
             },
-            {
-                path: 'create',
-                icon: 'compose',
-                name: 'article-create',
-                title: '文章更新',
-                component: () => import('@/views/module/article/create.vue')
-            },
         ]
     },
     {

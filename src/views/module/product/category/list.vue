@@ -12,7 +12,64 @@
             return {
                 category: [],
                 current_page: 1,
-                total: 0
+                total: 0,
+                columns: [
+                    {
+                        title: '编号',
+                        key: 'id'
+                    },
+                    {
+                        title: '名称',
+                        key: 'name'
+                    },
+                    {
+                        title: '父分类',
+                        key: 'pid',
+                    },
+                    {
+                        title: '排序',
+                        key: 'sort'
+                    },
+                    {
+                        title: '状态',
+                        key: 'status',
+                        render: (h, params) => {
+                            let type;
+                            if (params.row.type === 0) {
+                                type = '普通';
+                            } else if (params.row.type === 1) {
+                                type = '会员';
+                            }
+                            return h('div', [
+                                h('span', type)
+                            ]);
+                        }
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.index);
+                                        }
+                                    }
+                                }, '编辑')
+                            ]);
+                        }
+                    }
+                ],
             };
         },
         created() {
