@@ -174,6 +174,36 @@ export const appRouter = [
                 component: () => import('@/views/module/order/list.vue')
             },
         ]
+    },
+    {
+        path: '/product',
+        icon: 'social-buffer',
+        name: 'product',
+        title: '商品管理',
+        component: Main,
+        children: [
+            {
+                path: 'index/list',
+                icon: 'compose',
+                name: 'product-index-list',
+                title: '商品列表',
+                component: () => import('@/views/module/product/index/list.vue')
+            },
+            {
+                path: 'category/list',
+                icon: 'compose',
+                name: 'product-category-list',
+                title: '商品分类',
+                component: () => import('@/views/module/product/category/list.vue')
+            },
+            {
+                path: 'category/create-update',
+                icon: 'compose',
+                name: 'product-category-create-update',
+                title: '商品分类',
+                component: () => import('@/views/module/product/category/create.vue')
+            },
+        ]
     }
 ];
 
