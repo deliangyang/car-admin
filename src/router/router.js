@@ -98,6 +98,29 @@ export const appRouter = [
         ]
     },
     {
+        path: '/users',
+        icon: 'social-buffer',
+        name: 'component',
+        title: '用户管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'compose',
+                name: 'user-list',
+                title: '用户列表',
+                component: () => import('@/views/module/user/list.vue')
+            },
+            {
+                path: 'create',
+                icon: 'compose',
+                name: 'article-create',
+                title: '文章更新',
+                component: () => import('@/views/module/article/create.vue')
+            },
+        ]
+    },
+    {
         path: '/article',
         icon: 'social-buffer',
         name: 'component',
@@ -133,6 +156,22 @@ export const appRouter = [
                 name: 'category-list',
                 title: '分类列表',
                 component: () => import('@/views/module/category/list.vue')
+            },
+        ]
+    },
+    {
+        path: '/order',
+        icon: 'social-buffer',
+        name: 'order',
+        title: '订单管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'compose',
+                name: 'order-list',
+                title: '订单列表',
+                component: () => import('@/views/module/order/list.vue')
             },
         ]
     }

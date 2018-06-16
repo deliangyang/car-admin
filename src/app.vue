@@ -6,15 +6,15 @@
 
 <script>
     export default {
-        data() {
+        data () {
             return {
                 theme: this.$store.state.app.themeColor
             };
         },
-        mounted() {
+        mounted () {
 
         },
-        beforeDestroy() {
+        beforeDestroy () {
 
         },
         methods: {}

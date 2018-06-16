@@ -2,13 +2,13 @@
     <script :id="id" type="text/plain"></script>
     </template>
     <script>
-    import '@/styles/ueditor/ueditor.config.js'
-    import '@/styles/ueditor/ueditor.all.min.js'
-    import '@/styles/ueditor/lang/zh-cn/zh-cn.js'
+    import '@/styles/ueditor/ueditor.config.js';
+    import '@/styles/ueditor/ueditor.all.min.js';
+    import '@/styles/ueditor/lang/zh-cn/zh-cn.js';
 
     export default {
         name: 'UEditor',
-        data() {
+        data () {
             return {
                 editor: null
             }

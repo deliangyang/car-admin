@@ -1,33 +1,109 @@
 <template>
-
+    <div>
+        <Table border :columns="columns" :data="user" ref="table"></Table>
+        <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+    </div>
 </template>
 <script>
     export default {
         name: 'list',
-        data() {
+        data () {
             return {
-                user: []
-            }
+                columns: [
+                    {
+                        title: '编号',
+                        key: 'id'
+                    },
+                    {
+                        title: '昵称',
+                        key: 'name'
+                    },
+                    {
+                        title: '头像',
+                        key: 'avatar',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Avatar', {
+                                    props: {
+                                        src: params.row.avatar,
+                                        shape: 'square',
+                                        icon: 'person',
+                                        size: 'large'
+                                    }
+                                })
+                            ]);
+                        }
+                    },
+                    {
+                        title: '手机号码',
+                        key: 'mobile'
+                    },
+                    {
+                        title: '会员',
+                        key: 'type',
+                        render: (h, params) => {
+                            let type;
+                            if (params.row.type === 0) {
+                                type = '普通';
+                            } else if (params.row.type === 1) {
+                                type = '会员';
+                            }
+                            return h('div', [
+                                h('span', type)
+                            ]);
+                        }
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.index);
+                                        }
+                                    }
+                                }, '编辑')
+                            ]);
+                        }
+                    }
+                ],
+                user: [],
+                current_page: 1,
+                total: 0
+            };
         },
-        created() {
-
+        created () {
+            this.request(1);
         },
         methods: {
-            listRequest: function(page) {
-                this.$axios.get('/admin/user/list', {params: {page: page}}).then(function(res) {
-                    console.log(res)
-                    this.user.list = res.data
-                    this.total = res.data.total
-                    this.current_page = res.data.current_page
-                    this.article = res.data.data
-                    this.page_size = res.data.per_page
-                })
+            request (page) {
+                this.$axios.get('/admin/users', {params: {page: page}}).then((res) => {
+                    this.user = res.data.data;
+                    this.current_page = res.data.current_page;
+                    this.article = res.data.data;
+                    this.page_size = res.data.per_page;
+                });
+            },
+            change (page) {
+                this.request(page);
             }
         },
-        destroyed() {
+        destroyed () {
 
-        },
-    }
+        }
+    };
 </script>
 
 <style>
