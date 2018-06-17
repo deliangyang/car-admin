@@ -33,17 +33,6 @@
                     {
                         title: '状态',
                         key: 'status',
-                        render: (h, params) => {
-                            let type;
-                            if (params.row.type === 0) {
-                                type = '普通';
-                            } else if (params.row.type === 1) {
-                                type = '会员';
-                            }
-                            return h('div', [
-                                h('span', type)
-                            ]);
-                        }
                     },
                     {
                         title: '操作',
@@ -78,11 +67,24 @@
         computed: {},
         methods: {
             request (page) {
-                this.$axios.get('/admin/product/category', {params: {page: page}}).then((res) => {
+                let params = {
+                    params: {
+                        page: page
+                    }
+                };
+                this.$axios.get('/admin/product/category', params).then((res) => {
                     this.total = res.data.total;
                     this.current_page = res.data.current_page;
                     this.category = res.data.data;
                     this.page_size = res.data.per_page;
+                });
+            },
+            edit (index) {
+                this.$router.push({
+                    path: '/product/category/create-update',
+                    query: {
+                        id: this.category[index].id
+                    }
                 });
             }
         }

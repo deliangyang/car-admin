@@ -58,7 +58,7 @@ export const otherRouter = {
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue') },
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
-        { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
+       // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') }
     ]
@@ -66,47 +66,47 @@ export const otherRouter = {
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
-    {
-        path: '/access',
-        icon: 'key',
-        name: 'access',
-        title: '权限管理',
-        component: Main,
-        children: [
-            { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
-        ]
-    },
-    {
-        path: '/access-test',
-        icon: 'lock-combination',
-        title: '权限测试页',
-        name: 'accesstest',
-        access: 0,
-        component: Main,
-        children: [
-            { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') }
-        ]
-    },
-    {
-        path: '/international',
-        icon: 'earth',
-        title: {i18n: 'international'},
-        name: 'international',
-        component: Main,
-        children: [
-            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
-        ]
-    },
+    // {
+    //     path: '/access',
+    //     icon: 'key',
+    //     name: 'access',
+    //     title: '权限管理',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
+    //     ]
+    // },
+    // {
+    //     path: '/access-test',
+    //     icon: 'lock-combination',
+    //     title: '权限测试页',
+    //     name: 'accesstest',
+    //     access: 0,
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') }
+    //     ]
+    // },
+    // {
+    //     path: '/international',
+    //     icon: 'earth',
+    //     title: {i18n: 'international'},
+    //     name: 'international',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
+    //     ]
+    // },
     {
         path: '/users',
-        icon: 'social-buffer',
+        icon: 'person',
         name: 'component',
         title: '用户管理',
         component: Main,
         children: [
             {
                 path: 'list',
-                icon: 'compose',
+                icon: 'person',
                 name: 'user-list',
                 title: '用户列表',
                 component: () => import('@/views/module/user/list.vue')
@@ -154,14 +154,14 @@ export const appRouter = [
     },
     {
         path: '/order',
-        icon: 'social-buffer',
+        icon: 'social-usd',
         name: 'order',
         title: '订单管理',
         component: Main,
         children: [
             {
                 path: 'list',
-                icon: 'compose',
+                icon: 'social-usd',
                 name: 'order-list',
                 title: '订单列表',
                 component: () => import('@/views/module/order/list.vue')
@@ -170,30 +170,30 @@ export const appRouter = [
     },
     {
         path: '/product',
-        icon: 'social-buffer',
+        icon: 'ios-cart-outline',
         name: 'product',
         title: '商品管理',
         component: Main,
         children: [
             {
                 path: 'index/list',
-                icon: 'compose',
+                icon: 'ios-cart',
                 name: 'product-index-list',
                 title: '商品列表',
                 component: () => import('@/views/module/product/index/list.vue')
             },
             {
                 path: 'category/list',
-                icon: 'compose',
+                icon: 'ios-pricetag-outline',
                 name: 'product-category-list',
                 title: '商品分类',
                 component: () => import('@/views/module/product/category/list.vue')
             },
             {
                 path: 'category/create-update',
-                icon: 'compose',
+                icon: 'ios-filing',
                 name: 'product-category-create-update',
-                title: '商品分类',
+                title: '添加商品分类',
                 component: () => import('@/views/module/product/category/create.vue')
             },
         ]
