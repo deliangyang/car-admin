@@ -60,7 +60,11 @@ export const otherRouter = {
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
        // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
-        { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') }
+        { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
+        {
+            path: 'product/attr/create-update', title: '商品属性', name: 'product_attr_create_update',
+            component: () => import('@/views/module/product/attr/edit.vue')
+        }
     ]
 };
 
@@ -176,6 +180,13 @@ export const appRouter = [
         component: Main,
         children: [
             {
+                path: 'create-update',
+                icon: 'ios-filing',
+                name: 'product-create-update',
+                title: '添加商品',
+                component: () => import('@/views/module/product/index/create.vue')
+            },
+            {
                 path: 'index/list',
                 icon: 'ios-cart',
                 name: 'product-index-list',
@@ -188,6 +199,13 @@ export const appRouter = [
                 name: 'product-category-list',
                 title: '商品分类',
                 component: () => import('@/views/module/product/category/list.vue')
+            },
+            {
+                path: 'attr/list',
+                icon: 'ios-pricetag-outline',
+                name: 'product-attr-list',
+                title: '商品属性',
+                component: () => import('@/views/module/product/attr/list.vue')
             },
             {
                 path: 'category/create-update',

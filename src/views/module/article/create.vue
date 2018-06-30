@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-    import UEditor from '@/views/module/common/uEditor.vue'
+    import UEditor from '@/views/module/common/uEditor.vue';
     export default {
         components: {
             UEditor
