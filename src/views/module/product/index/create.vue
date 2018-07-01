@@ -3,7 +3,7 @@
     .product-box {
 
         .product-description {
-            margin-top: 20px;
+            margin-top: 10px;
         }
         h3 {
             margin-bottom: 10px;
@@ -53,56 +53,63 @@
 <template>
     <div class="product-box">
         <Row>
-            <Col span="8">
+            <Col span="24">
                 <Card>
                     <h3>商品信息</h3>
                     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                        <FormItem label="商品名称" prop="title">
-                            <Input v-model="formValidate.title" placeholder="商品名称"></Input>
-                        </FormItem>
+                        <Row>
+                            <Col span="12">
+                                <FormItem label="商品名称" prop="title">
+                                    <Input v-model="formValidate.title" placeholder="商品名称"></Input>
+                                </FormItem>
 
-                        <FormItem label="分类" prop="category">
-                            <Select class="product-category" @on-change="querySubCategories"
-                                    v-model="formValidate.category" placeholder="商品分类">
-                                <Option value="0">未选择</Option>
-                                <Option v-for="(item, index) in categories" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                            <Select class="product-category" @on-change="changeSubCategory"
-                                    v-model="formValidate.sub_category" placeholder="商品子分类">
-                                <Option value="0">未选择</Option>
-                                <Option v-for="(item, index) in subCategories" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                            <div>
+                                <FormItem label="分类" prop="category">
+                                    <Select class="product-category" @on-change="querySubCategories"
+                                            v-model="formValidate.category" placeholder="商品分类">
+                                        <Option value="0">未选择</Option>
+                                        <Option v-for="(item, index) in categories" :value="item.id">{{item.name}}</Option>
+                                    </Select>
+                                    <Select class="product-category" @on-change="changeSubCategory"
+                                            v-model="formValidate.sub_category" placeholder="商品子分类">
+                                        <Option value="0">未选择</Option>
+                                        <Option v-for="(item, index) in subCategories" :value="item.id">{{item.name}}</Option>
+                                    </Select>
+                                    <div>
                                 <span>
                                     <router-link to="/product/category/create-update">
                                         <Icon type="help-circled"></Icon> 去添加分类？</router-link>
                                 </span>
-                            </div>
-                        </FormItem>
-                        <FormItem label="价格" prop="price">
-                            <Input v-model="formValidate.price" placeholder="商品价格"></Input>
-                        </FormItem>
-                        <FormItem label="排序" prop="sort">
-                            <Input v-model="formValidate.sort" placeholder="排序"></Input>
-                        </FormItem>
-                        <FormItem label="是否上架" prop="status">
-                            <RadioGroup v-model="formValidate.status">
-                                <Radio label="0">下架</Radio>
-                                <Radio label="1">上架</Radio>
-                            </RadioGroup>
-                        </FormItem>
-                        <FormItem label="快递方式" prop="express_type">
-                            <CheckboxGroup v-model="formValidate.express_type">
-                                <Checkbox label="不支持混寄"></Checkbox>
-                                <Checkbox label="支持混寄"></Checkbox>
-                                <Checkbox label="门店自取"></Checkbox>
-                                <Checkbox label="墨尔本同城派送"></Checkbox>
-                            </CheckboxGroup>
-                        </FormItem>
-                        <FormItem label="商品简介" prop="summary">
-                            <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                                   placeholder="商品简介"></Input>
-                        </FormItem>
+                                    </div>
+                                </FormItem>
+                                <FormItem label="价格" prop="price">
+                                    <Input v-model="formValidate.price" placeholder="商品价格"></Input>
+                                </FormItem>
+
+                                <FormItem label="商品简介" prop="summary">
+                                    <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                                           placeholder="商品简介"></Input>
+                                </FormItem>
+                            </Col>
+                            <Col span="12">
+                                <FormItem label="排序" prop="sort">
+                                    <Input v-model="formValidate.sort" placeholder="排序"></Input>
+                                </FormItem>
+                                <FormItem label="是否上架" prop="status">
+                                    <RadioGroup v-model="formValidate.status">
+                                        <Radio label="0">下架</Radio>
+                                        <Radio label="1">上架</Radio>
+                                    </RadioGroup>
+                                </FormItem>
+                                <FormItem label="快递方式" prop="express_type">
+                                    <CheckboxGroup v-model="formValidate.express_type">
+                                        <Checkbox label="不支持混寄"></Checkbox>
+                                        <Checkbox label="支持混寄"></Checkbox>
+                                        <Checkbox label="门店自取"></Checkbox>
+                                        <Checkbox label="墨尔本同城派送"></Checkbox>
+                                    </CheckboxGroup>
+                                </FormItem>
+                            </Col>
+                        </Row>
                         <FormItem>
                             <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
                             <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">Reset
@@ -111,8 +118,10 @@
                     </Form>
                 </Card>
             </Col>
-            <Col span="16" class="padding-left-10">
-                <Card>
+        </Row>
+        <Row>
+            <Col span="24">
+                <Card class="product-description">
                     <h3>商品属性（Sku）</h3>
                     <Form ref="formValidate" :model="formValidate">
                         <FormItem
@@ -123,29 +132,26 @@
                                 :prop="'items.' + index + '.value'"
                                 :rules="skuRuleValidate">
                             <Row>
-                                <Col span="5">
+                                <Col span="3">
                                     <Select v-model="item.attr_value_id">
                                         <OptionGroup v-for="attrName in attrNames" :label="attrName.name">
                                             <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">{{ obj.name }} {{ attrName.unit}}</Option>
                                         </OptionGroup>
                                     </Select>
                                 </Col>
-                                <Col span="4" class="padding-left-5">
+                                <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
                                 </Col>
-                                <Col span="4" class="padding-left-5">
+                                <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
                                 </Col>
-                                <Col span="4" class="padding-left-5">
+                                <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.price" placeholder="请输入价格"></Input>
                                 </Col>
-                                <Col span="4" class="padding-left-5">
+                                <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.vip_amount" placeholder="请输入VIP价格"></Input>
                                 </Col>
-                                <Col span="4" class="sku-change-line">
-
-                                </Col>
-                                <Col span="5">
+                                <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
                                 </Col>
                                 <Col span="3" class="padding-left-5">
@@ -367,7 +373,6 @@
                 return check;
             },
             handleImageRemove (file) {
-                console.log(file)
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
                 this.formValidate.images.splice(fileList.indexOf(file), 1);
@@ -378,6 +383,28 @@
         },
         created () {
             this.queryAllParentCategory(0);
+            let query = this.$route.query
+            if (query.id) {
+                this.$axios.get('api/products/' + query.id).then((res) => {
+                    this.formValidate = res.data;
+                    let skus = res.data.skus;
+                    let temp, item;
+                    this.changeSubCategory();
+                    this.formValidate.items = [];
+                    this.formValidate.express_type = [];
+
+                    for (item in skus) {
+                        temp = skus[item];
+                        temp.index = this.index++;
+                        temp.status = 1;
+                        temp.value = '';
+                        this.formValidate.items.push(temp);
+                    }
+                    console.log(this.formValidate.items);
+                }).catch((res) => {
+                    console.log(res)
+                });
+            }
         }
     };
 </script>
