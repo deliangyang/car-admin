@@ -125,9 +125,6 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         let data = this.formValidate;
-                        if (data.subCategory > 0) {
-                            data.category = data.subCategory;
-                        }
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/product/attr/' + this.primaryId, data).then((res) => {
                                 if (res.statusCode === 200) {
@@ -185,7 +182,7 @@
                     this.formValidate.name = attrs.name;
                     this.formValidate.unit = attrs.unit;
                     this.formValidate.category = attrs.category;
-                    this.formValidate.subCategory = attrs.sub_category;
+                    this.formValidate.sub_category = attrs.sub_category;
                     let temp;
                     this.formValidate.items = [];
                     for (let item in attrs.attr_values) {
