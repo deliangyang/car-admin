@@ -81,8 +81,8 @@
                                 </span>
                                     </div>
                                 </FormItem>
-                                <FormItem label="价格" prop="price">
-                                    <Input v-model="formValidate.price" placeholder="商品价格"></Input>
+                                <FormItem label="价格" prop="amount">
+                                    <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
                                 </FormItem>
 
                                 <FormItem label="商品简介" prop="summary">
@@ -146,7 +146,7 @@
                                     <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
                                 </Col>
                                 <Col span="3" class="padding-left-5">
-                                    <Input type="text" v-model="item.price" placeholder="请输入价格"></Input>
+                                    <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
                                 </Col>
                                 <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.vip_amount" placeholder="请输入VIP价格"></Input>
@@ -252,7 +252,7 @@
                             attr_id: '',
                             status: 1,
                             sale: '',
-                            price: '',
+                            amount: '',
                             stock: '',
                             vip_amount: '',
                             discount: ''
@@ -285,11 +285,23 @@
                     if (valid) {
                         if (this.primaryId > 0) {
                             //
+                            this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
+                                this.$router.push({
+                                    path: '/product/index/list'
+                                });
+                                this.$Message.success('成功更新商品');
+                            }).catch((res) => {
+                                this.$Message.error('更新失败');
+                                console.log(res);
+                            });
                         } else {
                             this.$axios.post('/admin/products', this.formValidate).then((res) => {
+                                this.$router.push({
+                                    path: '/product/index/list'
+                                });
                                 this.$Message.success('Success!');
                             }).catch((res) => {
-                                //
+                                this.$Message.error('添加商品失败');
                             });
                         }
                     } else {
@@ -307,7 +319,7 @@
                     index: this.index,
                     status: 1,
                     stock: '',
-                    price: '',
+                    amount: '',
                     sale: ''
                 });
             },
@@ -334,7 +346,7 @@
                 let query = {
                     category: category,
                     sub_category: subCategory
-                }
+                };
                 this.$axios.get('/admin/product/attr', {params: query}).then((res) => {
                     this.attrNames = res.data;
                 });
@@ -345,7 +357,11 @@
             handleSuccess (res, file) {
                 file.url = res.src;
                 file.name = res.filename;
-                this.formValidate.images.push(res.src);
+                console.log(file)
+                this.formValidate.images.push({
+                    id: 0,
+                    src: res.src
+                });
             },
             handleFormatError (file) {
                 this.$Notice.warning({
@@ -364,7 +380,7 @@
                 this.visible = true;
             },
             handleBeforeUpload () {
-                const check = this.formValidate.images.length < 5;
+                const check = this.formValidate.images.length < 50;
                 if (!check) {
                     this.$Notice.warning({
                         title: 'Up to five pictures can be uploaded.'
@@ -380,18 +396,28 @@
         },
         mounted () {
             this.uploadList = this.$refs.upload.fileList;
+            console.log(this.uploadList);
         },
         created () {
             this.queryAllParentCategory(0);
             let query = this.$route.query
             if (query.id) {
-                this.$axios.get('api/products/' + query.id).then((res) => {
+                this.$axios.get('/admin/products/' + query.id).then((res) => {
                     this.formValidate = res.data;
                     let skus = res.data.skus;
                     let temp, item;
                     this.changeSubCategory();
                     this.formValidate.items = [];
                     this.formValidate.express_type = [];
+                    this.primaryId = query.id;
+
+                    for (item in res.data.images) {
+                        this.uploadList.push({
+                            url: res.data.images[item].src,
+                            status: 'finished',
+                            name: ''
+                        });
+                    }
 
                     for (item in skus) {
                         temp = skus[item];
@@ -402,7 +428,7 @@
                     }
                     console.log(this.formValidate.items);
                 }).catch((res) => {
-                    console.log(res)
+                    console.log(res);
                 });
             }
         }
