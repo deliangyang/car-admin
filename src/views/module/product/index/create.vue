@@ -161,7 +161,7 @@
                         </FormItem>
                         <FormItem>
                             <Row>
-                                <Col span="12">
+                                <Col span="8" offset="8">
                                     <Button type="dashed" long @click="handleAdd()" icon="plus-round">添加Sku</Button>
                                 </Col>
                             </Row>
@@ -329,6 +329,14 @@
             },
             handleRemove (index) {
                 this.skuItems.items[index].status = 0;
+                let skuId = this.skuItems.items[index].id;
+                if (skuId > 0) {
+                    this.$axios.delete('/admin/product/sku/' + skuId).then((res) => {
+                        this.$Message.success('成功移除sku');
+                    }).catch((res) => {
+                        this.$Message.error('移除sku失败');
+                    });
+                }
             },
             queryAllParentCategory (pid) {
                 let query = {
@@ -394,6 +402,13 @@
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
                 this.formValidate.images.splice(fileList.indexOf(file), 1);
+                if (file.id > 0) {
+                    this.$axios.delete('/admin/image/' + file.id).then((res) => {
+                        this.$Message.success('删除成功');
+                    }).catch((res) => {
+                        this.$Message.error('删除失败');
+                    });
+                }
             }
         },
         mounted () {
@@ -408,11 +423,15 @@
                     let skus = res.data.skus;
                     let temp, item;
                     this.changeSubCategory();
+                    this.skuItems.items[0].status = 0;
                     this.formValidate.express_type = [];
                     this.primaryId = query.id;
 
                     for (item in res.data.images) {
                         this.uploadList.push({
+                            id: res.data.images[item].id,
+                            entity_id: res.data.images[item].entity_id,
+                            entity_type: res.data.images[item].entity_type,
                             url: res.data.images[item].src,
                             status: 'finished',
                             name: ''
