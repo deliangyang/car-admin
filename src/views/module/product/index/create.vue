@@ -123,9 +123,9 @@
             <Col span="24">
                 <Card class="product-description">
                     <h3>商品属性（Sku）</h3>
-                    <Form ref="formValidate" :model="formValidate">
+                    <Form ref="skuItems" :model="skuItems">
                         <FormItem
-                                v-for="(item, index) in formValidate.items"
+                                v-for="(item, index) in skuItems.items"
                                 v-if="item.status"
                                 :key="index"
                                 :label="'Sku ' + item.index"
@@ -162,7 +162,7 @@
                         <FormItem>
                             <Row>
                                 <Col span="12">
-                                    <Button type="dashed" long @click="handleAdd" icon="plus-round">添加Sku</Button>
+                                    <Button type="dashed" long @click="handleAdd()" icon="plus-round">添加Sku</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -244,7 +244,9 @@
                     description: '',
                     amount: 0,
                     express_type: [],
-                    images: [],
+                    images: []
+                },
+                skuItems: {
                     items: [
                         {
                             index: 1,
@@ -283,6 +285,7 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        this.formValidate.items = this.skuItems.items;
                         if (this.primaryId > 0) {
                             //
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
@@ -292,7 +295,6 @@
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
                                 this.$Message.error('更新失败');
-                                console.log(res);
                             });
                         } else {
                             this.$axios.post('/admin/products', this.formValidate).then((res) => {
@@ -313,19 +315,20 @@
                 this.$refs[name].resetFields();
             },
             handleAdd () {
-                this.index++;
-                this.formValidate.items.push({
-                    value: '',
-                    index: this.index,
+                this.skuItems.items.push({
+                    index: this.index++,
                     status: 1,
-                    stock: '',
+                    attr_value_id: '',
+                    attr_id: '',
+                    sale: '',
                     amount: '',
-                    sale: ''
+                    stock: '',
+                    vip_amount: '',
+                    discount: ''
                 });
             },
             handleRemove (index) {
-                delete this.formValidate.items[index];
-                //this.formValidate.items[index].status = 0;
+                this.skuItems.items[index].status = 0;
             },
             queryAllParentCategory (pid) {
                 let query = {
@@ -357,7 +360,6 @@
             handleSuccess (res, file) {
                 file.url = res.src;
                 file.name = res.filename;
-                console.log(file)
                 this.formValidate.images.push({
                     id: 0,
                     src: res.src
@@ -396,7 +398,6 @@
         },
         mounted () {
             this.uploadList = this.$refs.upload.fileList;
-            console.log(this.uploadList);
         },
         created () {
             this.queryAllParentCategory(0);
@@ -407,7 +408,6 @@
                     let skus = res.data.skus;
                     let temp, item;
                     this.changeSubCategory();
-                    this.formValidate.items = [];
                     this.formValidate.express_type = [];
                     this.primaryId = query.id;
 
@@ -423,10 +423,8 @@
                         temp = skus[item];
                         temp.index = this.index++;
                         temp.status = 1;
-                        temp.value = '';
-                        this.formValidate.items.push(temp);
+                        this.skuItems.items.push(temp);
                     }
-                    console.log(this.formValidate.items);
                 }).catch((res) => {
                     console.log(res);
                 });
