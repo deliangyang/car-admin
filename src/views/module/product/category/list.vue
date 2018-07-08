@@ -1,7 +1,13 @@
 <template>
     <div>
-        <Table border :columns="columns" :data="category" ref="table"></Table>
-        <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        <Row>
+            <Col>
+                <Card>
+                    <Table :v-if="refresh" border :columns="columns" :data="category" ref="table"></Table>
+                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+                </Card>
+            </Col>
+        </Row>
     </div>
 </template>
 
@@ -13,6 +19,8 @@
                 category: [],
                 current_page: 1,
                 total: 0,
+                page_size: 15,
+                refresh: true,
                 columns: [
                     {
                         title: '编号',
@@ -25,6 +33,15 @@
                     {
                         title: '父分类',
                         key: 'pid',
+                        render: (h, params) => {
+                            let parentCategory = '-'
+                            if (params.row.category) {
+                                parentCategory = params.row.category.name
+                            }
+                            return h('div', [
+                                h('span', parentCategory)
+                            ])
+                        }
                     },
                     {
                         title: '排序',
@@ -62,11 +79,12 @@
             };
         },
         created() {
-            this.request(1);
+            //this.refresh = true
+            this.loadProductCategory(1);
         },
         computed: {},
         methods: {
-            request (page) {
+            loadProductCategory (page) {
                 let params = {
                     params: {
                         page: page
@@ -78,6 +96,7 @@
                     this.category = res.data.data;
                     this.page_size = res.data.per_page;
                 });
+                //this.refresh = false
             },
             edit (index) {
                 this.$router.push({
@@ -86,7 +105,19 @@
                         id: this.category[index].id
                     }
                 });
+            },
+            change (page) {
+                this.loadProductCategory(page)
             }
+        },
+        mounted () {
+            this.refresh = false
+            this.$nextTick(() => {
+                this.refresh = true
+            })
+        },
+        watch: {
+            
         }
     };
 </script>

@@ -3,7 +3,7 @@
         <Row>
             <Col>
                 <Card>
-                    <Table border :columns="columns" :data="skuValues" ref="table"></Table>
+                    <Table border :columns="columns" :data="feedback" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>
             </Col>
@@ -16,7 +16,7 @@
         name: 'list',
         data () {
             return {
-                skuValues: [],
+                feedback: [],
                 current_page: 1,
                 total: 0,
                 page_size: 20,
@@ -27,55 +27,46 @@
                         width: 80
                     },
                     {
-                        title: '名称',
-                        key: 'name',
+                        title: '标题',
+                        key: 'title',
                         width: 80
                     },
                     {
-                        title: '父分类',
-                        key: 'category',
-                        width: 80,
-                        render: (h, params) => {
-                            return h('div', [
-                                h('span', params.row.category.name)
-                            ])
-                        }
+                        title: '联系方式',
+                        key: 'contact',
+                        width: 160
                     },
                     {
-                        title: '子分类',
-                        key: 'sub_category',
-                        width: 80,
-                        render: (h, params) => {
-                            return h('div', [
-                                h('span', params.row.sub_category.name)
-                            ])
-                        }
+                        title: '链接',
+                        key: 'url',
+                        width: 200
                     },
                     {
-                        title: '单位',
+                        title: '图片',
                         key: 'unit',
-                        width: 80
+                        width: 70,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Avatar', {
+                                    props: {
+                                        src: params.row.image,
+                                        shape: 'square',
+                                        icon: 'person',
+                                        size: 'large'
+                                    }
+                                })
+                            ])
+                        }
                     },
                     {
-                        title: '属性',
-                        key: 'attr_values',
-                        render: (h, params, index) => {
-                            let values = []
-                            let color = ['blue', 'green', 'red', 'yellow', ]
-                            //let rand = 0
-                            params.row.attr_values.forEach(element => {
-                                //rand = Math.floor(Math.random() * color.length)
-                                values.push(h('Tag', {
-                                    props: {
-                                        color: color[element.attr_id % color.length]
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    }
-                                }, element.name + (params.row.unit === '-' ? '' : params.row.unit)))
-                            });
-                            return h('div', values)
-                        }
+                        title: '内容',
+                        key: 'content',
+                        width: 150
+                    },
+                    {
+                        title: '留言回复',
+                        key: 'remark',
+                        width: 150
                     },
                     {
                         title: '操作',
@@ -97,7 +88,7 @@
                                             this.edit(params.index);
                                         }
                                     }
-                                }, '编辑')
+                                }, '回复')
                             ]);
                         }
                     }
@@ -105,33 +96,33 @@
             };
         },
         created() {
-            this.loadSkuValues(1);
+            this.loadFeedback(1);
         },
         computed: {},
         methods: {
-            loadSkuValues (page) {
+            loadFeedback (page) {
                 let params = {
                     params: {
                         page: page
                     }
                 };
-                this.$axios.get('/admin/sku/value', params).then((res) => {
+                this.$axios.get('/admin/feedback', params).then((res) => {
                     this.total = res.data.total;
                     this.current_page = res.data.current_page;
-                    this.skuValues = res.data.data;
+                    this.feedback = res.data.data;
                     this.page_size = res.data.per_page;
                 });
             },
             edit (index) {
                 this.$router.push({
-                    path: '/product/attr/create-update',
+                    path: '/feedback/reply',
                     query: {
-                        id: this.skuValues[index].id
+                        id: this.feedback[index].id
                     }
                 });
             },
             change (page) {
-                this.loadSkuValues(page)
+                this.loadFeedback(page)
             }
         }
     };

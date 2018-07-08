@@ -3,7 +3,7 @@
         <Row>
             <Col>
                 <Card>
-                    <Table border :columns="columns" :data="skuValues" ref="table"></Table>
+                    <Table border :columns="columns" :data="address" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>
             </Col>
@@ -16,66 +16,66 @@
         name: 'list',
         data () {
             return {
-                skuValues: [],
+                address: [],
                 current_page: 1,
                 total: 0,
-                page_size: 20,
                 columns: [
                     {
                         title: '编号',
                         key: 'id',
+                        width: 60
+                    },
+                    {
+                        title: '用户',
+                        key: 'user_id',
                         width: 80
                     },
                     {
-                        title: '名称',
-                        key: 'name',
-                        width: 80
-                    },
-                    {
-                        title: '父分类',
-                        key: 'category',
+                        title: '省份',
+                        key: 'country',
                         width: 80,
                         render: (h, params) => {
                             return h('div', [
-                                h('span', params.row.category.name)
+                                h('span', params.row.province.name)
                             ])
                         }
                     },
                     {
-                        title: '子分类',
-                        key: 'sub_category',
+                        title: '城市',
+                        key: 'province',
                         width: 80,
                         render: (h, params) => {
                             return h('div', [
-                                h('span', params.row.sub_category.name)
+                                h('span', params.row.city.name)
                             ])
                         }
                     },
                     {
-                        title: '单位',
-                        key: 'unit',
-                        width: 80
+                        title: '区县',
+                        key: 'city', 
+                        width: 80,     
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.country.name)
+                            ])
+                        }                  
                     },
                     {
-                        title: '属性',
-                        key: 'attr_values',
-                        render: (h, params, index) => {
-                            let values = []
-                            let color = ['blue', 'green', 'red', 'yellow', ]
-                            //let rand = 0
-                            params.row.attr_values.forEach(element => {
-                                //rand = Math.floor(Math.random() * color.length)
-                                values.push(h('Tag', {
-                                    props: {
-                                        color: color[element.attr_id % color.length]
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    }
-                                }, element.name + (params.row.unit === '-' ? '' : params.row.unit)))
-                            });
-                            return h('div', values)
+                        title: '详细地址',
+                        key: 'detail'
+                    },
+                    {
+                        title: '坐标',
+                        key: 'point',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', `(${params.row.longitude}, ${params.row.latitude})`)
+                            ])
                         }
+                    },
+                    {
+                        title: '添加时间',
+                        key: 'created_at'
                     },
                     {
                         title: '操作',
@@ -102,38 +102,39 @@
                         }
                     }
                 ],
+                page_size: 15
             };
         },
-        created() {
-            this.loadSkuValues(1);
+        created () {
+            this.loadAddress(1);
         },
         computed: {},
         methods: {
-            loadSkuValues (page) {
+            loadAddress (page) {
                 let params = {
                     params: {
                         page: page
                     }
                 };
-                this.$axios.get('/admin/sku/value', params).then((res) => {
+                this.$axios.get('/admin/address', params).then((res) => {
                     this.total = res.data.total;
                     this.current_page = res.data.current_page;
-                    this.skuValues = res.data.data;
+                    this.address = res.data.data;
                     this.page_size = res.data.per_page;
                 });
             },
             edit (index) {
                 this.$router.push({
-                    path: '/product/attr/create-update',
+                    path: '/address/edit',
                     query: {
-                        id: this.skuValues[index].id
+                        id: this.address[index].id
                     }
                 });
             },
             change (page) {
-                this.loadSkuValues(page)
+                this.loadAddress(page);
             }
-        }
+        },
     };
 </script>
 

@@ -102,10 +102,10 @@
                                 </FormItem>
                                 <FormItem label="快递方式" prop="express_type">
                                     <CheckboxGroup v-model="formValidate.express_type">
-                                        <Checkbox label="不支持混寄"></Checkbox>
-                                        <Checkbox label="支持混寄"></Checkbox>
-                                        <Checkbox label="门店自取"></Checkbox>
-                                        <Checkbox label="墨尔本同城派送"></Checkbox>
+                                        <Checkbox value=1 label="不支持混寄"></Checkbox>
+                                        <Checkbox value=2 label="支持混寄"></Checkbox>
+                                        <Checkbox value=3 label="门店自取"></Checkbox>
+                                        <Checkbox value=4  label="墨尔本同城派送"></Checkbox>
                                     </CheckboxGroup>
                                 </FormItem>
                             </Col>
@@ -211,12 +211,11 @@
                 </Card>
             </Col>
         </Row>
-
         <Row>
             <Col span="24">
                 <Card class="product-description">
                     <h3>商品描述</h3>
-                    <UEditor :id="descriptionId" :content="formValidate.description" :config="config"></UEditor>
+                    <UEditor v-model="formValidate.description"></UEditor>
                 </Card>
             </Col>
         </Row>
@@ -241,7 +240,7 @@
                     sub_category: '',
                     sort: '',
                     status: '',
-                    description: '',
+                    description: '123',
                     amount: 0,
                     express_type: [],
                     images: []
@@ -264,9 +263,10 @@
                 config: {
                     initialFrameWidth: '100%',
                     initialFrameHeight: 350,
-                    wordCount: false
+                    wordCount: false,
+                    autoHeight: false
                 },
-                descriptionId: 'hello',
+                descriptionId: 'hello_ueditor',
                 categories: [],
                 subCategories: [],
                 ruleValidate: {
@@ -287,7 +287,6 @@
                     if (valid) {
                         this.formValidate.items = this.skuItems.items;
                         if (this.primaryId > 0) {
-                            //
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
                                 this.$router.push({
                                     path: '/product/index/list'

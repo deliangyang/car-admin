@@ -1,29 +1,33 @@
 <template>
     <div>
         <Row>
-            <Col span="18">
+            <Col span="24">
                 <Card>
-                    <Form :model="formItem" :label-width="80">
-                        <FormItem label="名称">
-                            <Input v-model="formItem.name" placeholder="请输入类型名称"></Input>
-                        </FormItem>
-                        <FormItem label="父分类">
-                            <Select v-model="formItem.pid">
-                                <Option value="0">未选择</Option>
-                                <Option v-for="(item, index) in parentCategory" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem label="排序">
-                            <Input v-model="formItem.sort" placeholder="Enter something..."></Input>
-                        </FormItem>
-                        <FormItem label="状态">
-                            <Input v-model="formItem.status" placeholder="Enter something..."></Input>
-                        </FormItem>
-                        <FormItem>
-                            <Button type="primary" v-on:click="addOrUpdateProductCategory">保存</Button>
-                            <Button type="ghost" style="margin-left: 8px">取消</Button>
-                        </FormItem>
-                    </Form>
+                    <Row>
+                        <Col span="12">
+                            <Form :model="formItem" :label-width="80">
+                                <FormItem label="名称">
+                                    <Input v-model="formItem.name" placeholder="请输入类型名称"></Input>
+                                </FormItem>
+                                <FormItem label="父分类">
+                                    <Select v-model="formItem.pid">
+                                        <Option value="0">未选择</Option>
+                                        <Option v-for="(item, index) in parentCategory" :value="item.id">{{item.name}}</Option>
+                                    </Select>
+                                </FormItem>
+                                <FormItem label="排序">
+                                    <Input v-model="formItem.sort" placeholder="Enter something..."></Input>
+                                </FormItem>
+                                <FormItem label="状态">
+                                    <Input v-model="formItem.status" placeholder="Enter something..."></Input>
+                                </FormItem>
+                                <FormItem>
+                                    <Button type="primary" v-on:click="addOrUpdateProductCategory">保存</Button>
+                                    <Button type="ghost" style="margin-left: 8px">取消</Button>
+                                </FormItem>
+                            </Form>
+                        </Col>
+                    </Row>
                 </Card>
             </Col>
         </Row>
@@ -73,6 +77,9 @@
                         this.$Message.success('添加成功');
                     });
                 }
+                this.$router.push({
+                    path: '/product/category/list'
+                })
             }
         },
         destroyed () {

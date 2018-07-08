@@ -64,17 +64,23 @@ export const otherRouter = {
             component: () => import('@/views/own-space/own-space.vue')
         },
         // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
-        {
-            path: 'shopping',
-            title: '购物详情',
-            name: 'shopping',
-            component: () => import('@/views/advanced-router/component/shopping-info.vue')
-        }, // 用于展示带参路由
         {path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue')},
         {
             path: 'product/attr/create-update', title: '商品属性', name: 'product_attr_create_update',
             component: () => import('@/views/module/product/attr/edit.vue')
-        }
+        },
+        {
+            path: 'address/edit',
+            name: 'address-edit',
+            title: '编辑收货地址',
+            component: () => import('@/views/module/address/edit.vue')
+        },
+        {
+            path: 'feedback/reply',
+            name: 'feedback-reply',
+            title: '回复反馈',
+            component: () => import('@/views/module/feedback/reply.vue')
+        },
     ]
 };
 
@@ -234,11 +240,43 @@ export const appRouter = [
         component: Main,
         children: [
             {
-                path: 'shopping-cart',
+                path: 'cart',
                 icon: 'ios-filing',
                 name: 'shopping-cart',
                 title: '购物车商品',
                 component: () => import('@/views/module/shopping/cart/index.vue')
+            },
+        ]
+    },
+    {
+        path: '/address',
+        icon: 'ios-cart-outline',
+        name: 'address',
+        title: '收货地址管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'ios-filing',
+                name: 'address-list',
+                title: '收货地址',
+                component: () => import('@/views/module/address/index.vue')
+            },
+        ]
+    },
+    {
+        path: '/feedback',
+        icon: 'ios-cart-outline',
+        name: 'feedback',
+        title: '反馈管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'ios-filing',
+                name: 'feedback-list',
+                title: '意见反馈',
+                component: () => import('@/views/module/feedback/index.vue')
             },
         ]
     }
