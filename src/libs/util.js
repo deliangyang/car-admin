@@ -7,7 +7,7 @@ let util = {
 
 };
 util.title = function (title) {
-    title = title || 'iView admin';
+    title = title || '海壳网-小程序后台';
     window.document.title = title;
 };
 

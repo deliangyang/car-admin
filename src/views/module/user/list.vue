@@ -1,7 +1,13 @@
 <template>
     <div>
-        <Table border :columns="columns" :data="user" ref="table"></Table>
-        <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        <Row>
+            <Col>
+                <Card>
+                    <Table border :columns="columns" :data="user" ref="table"></Table>
+                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+                </Card>
+            </Col>
+        </Row>        
     </div>
 </template>
 <script>
@@ -12,11 +18,25 @@
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80
                     },
                     {
                         title: '昵称',
-                        key: 'name'
+                        key: 'name',
+                        width: 150
+                    },
+                    {
+                        title: '性别',
+                        key: 'gender',
+                        width: 80,
+                        render: (h, params) => {
+                            let gender = ['保密', '男', '女']
+                            let translateGender = gender[params.row.gender] || gender[0]
+                            return h('div', [
+                                h('span', translateGender)
+                            ])
+                        }
                     },
                     {
                         title: '头像',
@@ -37,11 +57,17 @@
                     },
                     {
                         title: '手机号码',
-                        key: 'mobile'
+                        key: 'mobile',
+                        width: 160
+                    },
+                    {
+                        title: 'openId',
+                        key: 'open_id',
                     },
                     {
                         title: '会员',
                         key: 'type',
+                        width: 80,
                         render: (h, params) => {
                             let type;
                             if (params.row.type === 0) {
@@ -98,6 +124,15 @@
             },
             change (page) {
                 this.request(page);
+            },
+            edit (index) {
+                let userId = this.user[index].id
+                this.$router.push({
+                    path: '/user/edit',
+                    query: {
+                        id: userId
+                    }
+                });
             }
         },
         destroyed () {

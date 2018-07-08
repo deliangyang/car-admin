@@ -37,11 +37,11 @@ export const page500 = {
     component: () => import('@/views/error-page/500.vue')
 };
 
-export const preview = {
-    path: '/preview',
-    name: 'preview',
-    component: () => import('@/views/form/article-publish/preview.vue')
-};
+// export const preview = {
+//     path: '/preview',
+//     name: 'preview',
+//     component: () => import('@/views/form/article-publish/preview.vue')
+// };
 
 export const locking = {
     path: '/locking',
@@ -56,11 +56,21 @@ export const otherRouter = {
     redirect: '/home',
     component: Main,
     children: [
-        { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue') },
-        { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
-       // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
-        { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
-        { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
+        {path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue')},
+        {
+            path: 'ownspace',
+            title: '个人中心',
+            name: 'ownspace_index',
+            component: () => import('@/views/own-space/own-space.vue')
+        },
+        // { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
+        {
+            path: 'shopping',
+            title: '购物详情',
+            name: 'shopping',
+            component: () => import('@/views/advanced-router/component/shopping-info.vue')
+        }, // 用于展示带参路由
+        {path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue')},
         {
             path: 'product/attr/create-update', title: '商品属性', name: 'product_attr_create_update',
             component: () => import('@/views/module/product/attr/edit.vue')
@@ -117,29 +127,29 @@ export const appRouter = [
             },
         ]
     },
-    {
-        path: '/article',
-        icon: 'social-buffer',
-        name: 'component',
-        title: '文章知识',
-        component: Main,
-        children: [
-            {
-                path: 'list',
-                icon: 'compose',
-                name: 'article-list',
-                title: '文章列表',
-                component: () => import('@/views/module/article/list.vue')
-            },
-            {
-                path: 'create',
-                icon: 'compose',
-                name: 'article-create',
-                title: '文章更新',
-                component: () => import('@/views/module/article/create.vue')
-            },
-        ]
-    },
+    // {
+    //     path: '/article',
+    //     icon: 'social-buffer',
+    //     name: 'component',
+    //     title: '文章知识',
+    //     component: Main,
+    //     children: [
+    //         {
+    //             path: 'list',
+    //             icon: 'compose',
+    //             name: 'article-list',
+    //             title: '文章列表',
+    //             component: () => import('@/views/module/article/list.vue')
+    //         },
+    //         {
+    //             path: 'create',
+    //             icon: 'compose',
+    //             name: 'article-create',
+    //             title: '文章更新',
+    //             component: () => import('@/views/module/article/create.vue')
+    //         },
+    //     ]
+    // },
     {
         path: '/category',
         icon: 'social-buffer',
@@ -197,14 +207,14 @@ export const appRouter = [
                 path: 'category/list',
                 icon: 'ios-pricetag-outline',
                 name: 'product-category-list',
-                title: '商品分类',
+                title: '商品分类列表',
                 component: () => import('@/views/module/product/category/list.vue')
             },
             {
                 path: 'attr/list',
                 icon: 'ios-pricetag-outline',
                 name: 'product-attr-list',
-                title: '商品属性',
+                title: '商品Sku属性',
                 component: () => import('@/views/module/product/attr/list.vue')
             },
             {
@@ -215,6 +225,22 @@ export const appRouter = [
                 component: () => import('@/views/module/product/category/create.vue')
             },
         ]
+    },
+    {
+        path: '/shopping',
+        icon: 'ios-cart-outline',
+        name: 'shopping',
+        title: '购物车管理',
+        component: Main,
+        children: [
+            {
+                path: 'shopping-cart',
+                icon: 'ios-filing',
+                name: 'shopping-cart',
+                title: '购物车商品',
+                component: () => import('@/views/module/shopping/cart/index.vue')
+            },
+        ]
     }
 ];
 
@@ -222,7 +248,7 @@ export const appRouter = [
 export const routers = [
     loginRouter,
     otherRouter,
-    preview,
+    //preview,
     locking,
     ...appRouter,
     page500,

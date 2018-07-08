@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table border :columns="columns" :data="category" ref="table"></Table>
+        <Table border :columns="columns" :data="skuValues" ref="table"></Table>
         <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
     </div>
 </template>
@@ -10,29 +10,66 @@
         name: 'list',
         data () {
             return {
-                category: [],
+                skuValues: [],
                 current_page: 1,
                 total: 0,
+                page_size: 20,
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80
                     },
                     {
                         title: '名称',
-                        key: 'name'
+                        key: 'name',
+                        width: 80
                     },
                     {
                         title: '父分类',
-                        key: 'pid',
+                        key: 'category',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.category.name)
+                            ])
+                        }
                     },
                     {
-                        title: '排序',
-                        key: 'sort'
+                        title: '子分类',
+                        key: 'sub_category',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.sub_category.name)
+                            ])
+                        }
                     },
                     {
-                        title: '状态',
-                        key: 'status',
+                        title: '单位',
+                        key: 'unit',
+                        width: 80
+                    },
+                    {
+                        title: '属性',
+                        key: 'attr_values',
+                        render: (h, params, index) => {
+                            let values = []
+                            let color = ['blue', 'green', 'red', 'yellow', ]
+                            //let rand = 0
+                            params.row.attr_values.forEach(element => {
+                                //rand = Math.floor(Math.random() * color.length)
+                                values.push(h('Tag', {
+                                    props: {
+                                        color: color[element.attr_id % color.length]
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    }
+                                }, element.name + (params.row.unit === '-' ? '' : params.row.unit)))
+                            });
+                            return h('div', values)
+                        }
                     },
                     {
                         title: '操作',
@@ -62,30 +99,33 @@
             };
         },
         created() {
-            this.request(1);
+            this.loadSkuValues(1);
         },
         computed: {},
         methods: {
-            request (page) {
+            loadSkuValues (page) {
                 let params = {
                     params: {
                         page: page
                     }
                 };
-                this.$axios.get('/admin/product/category', params).then((res) => {
+                this.$axios.get('/admin/sku/value', params).then((res) => {
                     this.total = res.data.total;
                     this.current_page = res.data.current_page;
-                    this.category = res.data.data;
+                    this.skuValues = res.data.data;
                     this.page_size = res.data.per_page;
                 });
             },
             edit (index) {
                 this.$router.push({
-                    path: '/product/category/create-update',
+                    path: '/product/attr/create-update',
                     query: {
-                        id: this.category[index].id
+                        id: this.skuValues[index].id
                     }
                 });
+            },
+            change (page) {
+                this.loadSkuValues(page)
             }
         }
     };

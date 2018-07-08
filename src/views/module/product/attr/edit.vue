@@ -138,6 +138,9 @@
                                 }
                             });
                         }
+                        this.$router.push({
+                            path: '/product/attr/list'
+                        })
                     } else {
                         this.$Message.error('Fail!');
                     }

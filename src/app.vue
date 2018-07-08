@@ -33,4 +33,7 @@
         width: 100%;
         height: 100%;
     }
+    ul.ivu-page {
+        margin-top: 20px;
+    }
 </style>
