@@ -252,6 +252,7 @@ util.fullscreenEvent = function (vm) {
 };
 
 util.checkUpdate = function (vm) {
+    return false;
     axios.get('https://api.github.com/repos/iview/iview-admin/releases/latest').then(res => {
         let version = res.data.tag_name;
         vm.$Notice.config({
