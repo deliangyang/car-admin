@@ -24,7 +24,8 @@ export default {
       editor: null,
       defaultConfig: {
         UEDITOR_HOME_URL: 'https://xcx.sourcedev.cc/vendor/ueditor/',
-        zIndex: 9999
+        zIndex: 9999,
+        initialFrameHeight: 600
       }
     }
   },

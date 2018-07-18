@@ -81,6 +81,7 @@ export const otherRouter = {
             title: '回复反馈',
             component: () => import('@/views/module/feedback/reply.vue')
         },
+        {path:'order/detail', name:'order-detail', title:'订单详情', component: () => import('@/views/module/order/detail.vue')}
     ]
 };
 
@@ -252,7 +253,7 @@ export const appRouter = [
         path: '/address',
         icon: 'ios-cart-outline',
         name: 'address',
-        title: '收货地址管理',
+        title: '地址管理',
         component: Main,
         children: [
             {
@@ -261,6 +262,13 @@ export const appRouter = [
                 name: 'address-list',
                 title: '收货地址',
                 component: () => import('@/views/module/address/index.vue')
+            },
+            {
+                path: 'consignor',
+                icon: 'ios-filing',
+                name: 'address-deverliy-list',
+                title: '发货地址',
+                component: () => import('@/views/module/address/consignor.vue')
             },
         ]
     },

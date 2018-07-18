@@ -31,18 +31,34 @@
                         width: 80
                     },
                     {
-                        title: '联系方式',
-                        key: 'contact',
-                        width: 80
+                        title: '省份',
+                        key: 'country',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.province.name)
+                            ])
+                        }
                     },
                     {
-                        title: '地址',
-                        key: 'location'
+                        title: '城市',
+                        key: 'province',
+                        width: 80,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.city.name)
+                            ])
+                        }
                     },
                     {
-                        title: '街道',
-                        key: 'address', 
-                        width: 80        
+                        title: '区县',
+                        key: 'city', 
+                        width: 80,     
+                        render: (h, params) => {
+                            return h('div', [
+                                h('span', params.row.country.name)
+                            ])
+                        }                  
                     },
                     {
                         title: '详细地址',

@@ -267,4 +267,7 @@ util.checkUpdate = function (vm) {
     });
 };
 
+util.HOST = 'https://xcx.sourcedev.cc/';
+util.imageUploadUrl = util.HOST + 'admin/upload/image';
+
 export default util;

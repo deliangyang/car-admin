@@ -64,30 +64,32 @@
                                 </FormItem>
 
                                 <FormItem label="分类" prop="category">
-                                    <Select class="product-category" @on-change="querySubCategories"
-                                            v-model="formValidate.category" placeholder="商品分类">
+                                    <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in categories" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, index) in categories" :key="index" :value="item.id">{{item.name}}</Option>
                                     </Select>
-                                    <Select class="product-category" @on-change="changeSubCategory"
-                                            v-model="formValidate.sub_category" placeholder="商品子分类">
+                                    <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in subCategories" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, index) in subCategories" :key="index" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                     <div>
-                                <span>
-                                    <router-link to="/product/category/create-update">
-                                        <Icon type="help-circled"></Icon> 去添加分类？</router-link>
-                                </span>
+                                        <span>
+                                            <router-link to="/product/category/create-update">
+                                                <Icon type="help-circled"></Icon> 去添加分类？
+                                            </router-link>
+                                        </span>
                                     </div>
                                 </FormItem>
                                 <FormItem label="价格" prop="amount">
                                     <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
                                 </FormItem>
+                                 <FormItem label="VIP 价格" prop="amount">
+                                    <Input v-model="formValidate.amount" placeholder="商品VIP 价格"></Input>
+                                </FormItem>
 
                                 <FormItem label="商品简介" prop="summary">
                                     <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                                           placeholder="商品简介"></Input>
+                                        placeholder="商品简介"></Input>
                                 </FormItem>
                             </Col>
                             <Col span="12">
@@ -134,12 +136,14 @@
                             <Row>
                                 <Col span="3">
                                     <Select v-model="item.attr_value_id">
-                                        <OptionGroup v-for="attrName in attrNames" :label="attrName.name">
-                                            <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">{{ obj.name }} {{ attrName.unit}}</Option>
+                                        <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index" :label="attrName.name">
+                                            <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">
+                                                {{ obj.name }} {{ attrName.unit}}
+                                            </Option>
                                         </OptionGroup>
                                     </Select>
                                 </Col>
-                                <Col span="3" class="padding-left-5">
+                            <Col span="3" class="padding-left-5">
                                     <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
                                 </Col>
                                 <Col span="3" class="padding-left-5">
@@ -175,7 +179,7 @@
             <Col span="24">
                 <Card class="product-description">
                     <h3>商品图片</h3>
-                    <div class="demo-upload-list" v-for="item in uploadList">
+                    <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
                         <template v-if="item.status === 'finished'">
                             <img :src="item.url">
                             <div class="demo-upload-list-cover">
@@ -199,7 +203,7 @@
                             :before-upload="handleBeforeUpload"
                             multiple
                             type="drag"
-                            action="https://xcx.sourcedev.cc/admin/upload/image"
+                            :action="uploadImageUrl"
                             style="display: inline-block;width:58px;">
                         <div style="width: 58px;height:58px;line-height: 58px;">
                             <Icon type="camera" size="20"></Icon>
@@ -224,27 +228,19 @@
 <script>
     import UEditor from '@/views/module/common/uEditor.vue';
     import skuRuleValidate from '@/validate/product';
+    import util from '@/libs/util';
     export default {
         components: {
             UEditor
         },
         data () {
             return {
+                uploadImageUrl: util.imageUploadUrl,
                 index: 1,
                 primaryId: 0,
                 attrNames: [],
                 attrValues: [],
-                formValidate: {
-                    title: '',
-                    category: '',
-                    sub_category: '',
-                    sort: '',
-                    status: '',
-                    description: '123',
-                    amount: 0,
-                    express_type: [],
-                    images: []
-                },
+                formValidate: {},
                 skuItems: {
                     items: [
                         {
@@ -262,7 +258,7 @@
                 },
                 config: {
                     initialFrameWidth: '100%',
-                    initialFrameHeight: 350,
+                    initialFrameHeight: 700,
                     wordCount: false,
                     autoHeight: false
                 },
@@ -412,6 +408,17 @@
         },
         mounted () {
             this.uploadList = this.$refs.upload.fileList;
+            console.log('xxxxxxxxxxxxx+xxxx')
+        },
+        watch: {
+            'formValidate.sub_category'(curVal, oldVal) {
+                console.log('xxxxxxxxxxxxxxxxxxxxx')
+                console.log(curVal, oldVal);
+                console.log('xxxxxxxxxxxxxxxxxxxxx')
+            },
+            'subCategories' (curVal, oldVal) {
+                console.log(curVal, oldVal)
+            }
         },
         created () {
             this.queryAllParentCategory(0);
@@ -421,7 +428,7 @@
                     this.formValidate = res.data;
                     let skus = res.data.skus;
                     let temp, item;
-                    this.changeSubCategory();
+                    //this.changeSubCategory();
                     this.skuItems.items[0].status = 0;
                     this.formValidate.express_type = [];
                     this.primaryId = query.id;
@@ -436,13 +443,16 @@
                             name: ''
                         });
                     }
-
                     for (item in skus) {
                         temp = skus[item];
                         temp.index = this.index++;
                         temp.status = 1;
                         this.skuItems.items.push(temp);
                     }
+                    
+                    console.log(this.formValidate.category)
+                    console.log(this.formValidate.sub_category)
+                    this.queryAllParentCategory(this.formValidate.category);
                 }).catch((res) => {
                     console.log(res);
                 });
