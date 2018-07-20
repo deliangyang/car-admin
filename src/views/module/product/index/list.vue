@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table border :columns="columns" :data="category" ref="table"></Table>
+        <Table border :columns="columns" :data="newProducts" ref="table"></Table>
         <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
         <Modal title="View Image" v-model="visible">
             <img :src="showImage" v-if="visible" style="width: 100%">
@@ -13,7 +13,7 @@
         name: 'list',
         data () {
             return {
-                category: [],
+                products: [],
                 current_page: 1,
                 showImage: '',
                 visible: false,
@@ -97,7 +97,16 @@
         created () {
             this.loadProducts(1);
         },
-        computed: {},
+        computed: {
+            newProducts: function() {
+                let tmpProducts = []
+                this.products.forEach(element => {
+                    element.amount = '$ ' + (element.amount / 100).toFixed(2) + ' AUD'
+                    tmpProducts.push(element)
+                });
+                return tmpProducts;
+            }
+        },
         methods: {
             loadProducts (page) {
                 let params = {
@@ -108,7 +117,7 @@
                 this.$axios.get('/admin/products', params).then((res) => {
                     this.total = res.data.total;
                     this.current_page = res.data.current_page;
-                    this.category = res.data.data;
+                    this.products = res.data.data;
                     this.page_size = res.data.per_page;
                 });
             },
@@ -116,7 +125,7 @@
                 this.$router.push({
                     path: '/product/create-update',
                     query: {
-                        id: this.category[index].id
+                        id: this.products[index].id
                     }
                 });
             },

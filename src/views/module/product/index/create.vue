@@ -1,7 +1,5 @@
 <style lang="less">
-    @import "../../../../styles/common.less";
     .product-box {
-
         .product-description {
             margin-top: 10px;
         }
@@ -12,42 +10,6 @@
             width: 43px;
             height: 10px;
         }
-    }
-    .demo-upload-list{
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-        text-align: center;
-        line-height: 60px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin-right: 4px;
-    }
-    .demo-upload-list img{
-        width: 100%;
-        height: 100%;
-    }
-    .demo-upload-list-cover{
-        display: none;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0,0,0,.6);
-    }
-    .demo-upload-list:hover .demo-upload-list-cover{
-        display: block;
-    }
-    .demo-upload-list-cover i{
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-        margin: 0 2px;
     }
 </style>
 <template>
@@ -84,7 +46,7 @@
                                     <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
                                 </FormItem>
                                  <FormItem label="VIP 价格" prop="amount">
-                                    <Input v-model="formValidate.amount" placeholder="商品VIP 价格"></Input>
+                                    <Input v-model="formValidate.vip_amount" placeholder="商品VIP 价格"></Input>
                                 </FormItem>
 
                                 <FormItem label="商品简介" prop="summary">
@@ -408,20 +370,14 @@
         },
         mounted () {
             this.uploadList = this.$refs.upload.fileList;
-            console.log('xxxxxxxxxxxxx+xxxx')
+            console.log('xxxxxxxxxxxxx+xxxx');
+            this.queryAllParentCategory(0);
+            this.queryAllParentCategory(this.formValidate.category);
         },
         watch: {
-            'formValidate.sub_category'(curVal, oldVal) {
-                console.log('xxxxxxxxxxxxxxxxxxxxx')
-                console.log(curVal, oldVal);
-                console.log('xxxxxxxxxxxxxxxxxxxxx')
-            },
-            'subCategories' (curVal, oldVal) {
-                console.log(curVal, oldVal)
-            }
+           
         },
         created () {
-            this.queryAllParentCategory(0);
             let query = this.$route.query
             if (query.id) {
                 this.$axios.get('/admin/products/' + query.id).then((res) => {
@@ -449,12 +405,7 @@
                         temp.status = 1;
                         this.skuItems.items.push(temp);
                     }
-                    
-                    console.log(this.formValidate.category)
-                    console.log(this.formValidate.sub_category)
-                    this.queryAllParentCategory(this.formValidate.category);
                 }).catch((res) => {
-                    console.log(res);
                 });
             }
         }

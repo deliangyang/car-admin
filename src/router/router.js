@@ -81,7 +81,7 @@ export const otherRouter = {
             title: '回复反馈',
             component: () => import('@/views/module/feedback/reply.vue')
         },
-        {path:'order/detail', name:'order-detail', title:'订单详情', component: () => import('@/views/module/order/detail.vue')}
+        {path:'order/detail', name:'order-detail', title:'订单详情', component: () => import('@/views/module/order/detail.vue')},
     ]
 };
 
@@ -286,6 +286,27 @@ export const appRouter = [
                 title: '意见反馈',
                 component: () => import('@/views/module/feedback/index.vue')
             },
+        ]
+    },
+    {
+        path: '/common',
+        icon: 'ios-setting',
+        name: 'common',
+        title: '常用配置',
+        component: Main,
+        children: [
+            {path: 'rollscreen', name:'roll-screen', title: '首页轮播图', component: () => import('@/views/module/common/rollscreen/index.vue')},
+            {path: 'rollscreen/create-update', name:'roll-screen-update-create', title: '添加轮播图', component: () => import('@/views/module/common/rollscreen/create-update.vue')},
+        ]
+    },
+    {
+        path: '/express',
+        icon: 'ios-setting',
+        name: 'express',
+        title: '快递管理',
+        component: Main,
+        children: [
+            {path: 'express', name:'express-list', title: '快递列表', component: () => import('@/views/module/common/express/index.vue')},
         ]
     }
 ];
