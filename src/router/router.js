@@ -82,6 +82,11 @@ export const otherRouter = {
             component: () => import('@/views/module/feedback/reply.vue')
         },
         {path:'order/detail', name:'order-detail', title:'订单详情', component: () => import('@/views/module/order/detail.vue')},
+        {path:'user/edit', name:'user-update', title:'编辑用户信息', component: () => import('@/views/module/user/create.vue')},
+        {path:'found/cicle/create-update', name:'found-cicle-update', title:'编辑发现', component: () => import('@/views/module/found/update.vue')},
+        {path: 'common/rollscreen/create-update', name:'roll-screen-update-create', title: '添加轮播图', component: () => import('@/views/module/common/rollscreen/create-update.vue')},
+        {path: 'common/system/notice/add-update', name:'sys-notice-add-update', title: '更新公告', component: () => import('@/views/module/sys/notice/add-update.vue')},
+
     ]
 };
 
@@ -158,18 +163,18 @@ export const appRouter = [
     //     ]
     // },
     {
-        path: '/category',
+        path: '/found',
         icon: 'social-buffer',
-        name: 'category',
-        title: '分类',
+        name: 'found',
+        title: '发现页管理',
         component: Main,
         children: [
             {
                 path: 'list',
                 icon: 'compose',
-                name: 'category-list',
-                title: '分类列表',
-                component: () => import('@/views/module/category/list.vue')
+                name: 'found-list',
+                title: '发现列表',
+                component: () => import('@/views/module/found/list.vue')
             },
         ]
     },
@@ -296,7 +301,14 @@ export const appRouter = [
         component: Main,
         children: [
             {path: 'rollscreen', name:'roll-screen', title: '首页轮播图', component: () => import('@/views/module/common/rollscreen/index.vue')},
-            {path: 'rollscreen/create-update', name:'roll-screen-update-create', title: '添加轮播图', component: () => import('@/views/module/common/rollscreen/create-update.vue')},
+            {path: 'system/notice', name:'system-notice-index', title: '系统公告', component: () => import('@/views/module/sys/notice/index.vue')},
+            {
+                path: 'category',
+                icon: 'compose',
+                name: 'category-list',
+                title: '首页分类',
+                component: () => import('@/views/module/category/list.vue')
+            },
         ]
     },
     {
@@ -307,6 +319,17 @@ export const appRouter = [
         component: Main,
         children: [
             {path: 'express', name:'express-list', title: '快递列表', component: () => import('@/views/module/common/express/index.vue')},
+        ]
+    },
+    {
+        path: '/stat',
+        icon: 'ios-setting',
+        name: 'stat',
+        title: '数据统计',
+        component: Main,
+        children: [
+            {path: 'register', name:'stat-register', title: '注册统计', component: () => import('@/views/module/stat/register.vue')},
+            {path: 'order', name:'stat-order', title: '订单统计', component: () => import('@/views/module/stat/orders.vue')},
         ]
     }
 ];

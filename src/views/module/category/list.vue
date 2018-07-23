@@ -5,8 +5,15 @@
 </style>
 <template>
     <div>
-        <Table border :columns="columns" :data="article" ref="table"></Table>
-        <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        <Card>
+            <p slot="title">首页分类</p>
+            <a href="#/common/category/add-update" slot="extra">
+                <Icon type="plus-round"></Icon>
+                添加分类
+            </a>
+            <Table border :columns="columns" :data="article" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
+        </Card>        
     </div>
 </template>
 
@@ -18,6 +25,7 @@
                     {
                         title: '编号',
                         key: 'id',
+                        width: 80
                     },
                     {
                         title: '名称',
@@ -26,10 +34,40 @@
                     {
                         title: '排序',
                         key: 'sort',
+                        width: 80
+                    },
+                    {
+                        title: '封面',
+                        key: 'cover',
+                        align: 'center',
+                        width: 120,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Avatar', {
+                                    props: {
+                                        src: params.row.cover,
+                                        shape: 'square',
+                                        size: 'large'
+                                    }
+                                })
+                            ]);
+                        }
+                    },
+                    {
+                        title: '跳转途径',
+                        key: 'url'
                     },
                     {
                         title: '状态',
-                        key: 'status'
+                        key: 'status',
+                        width: 80,
+                        render: (h, params) => {
+                            let status = '启用'
+                            if (params.row.status === 0) {
+                                let status = '停用';
+                            }
+                            return h('div', status)
+                        }
                     },
                     {
                         title: '操作',

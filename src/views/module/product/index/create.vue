@@ -3,12 +3,21 @@
         .product-description {
             margin-top: 10px;
         }
-        h3 {
-            margin-bottom: 10px;
-        }
         .sku-change-line {
             width: 43px;
             height: 10px;
+        }
+        .bottom-button {
+            margin-top: 20px;
+        }
+        .product-category {
+            width: 200px;
+        }
+        .marin-left-33 {
+            margin-left: 33px;
+        }
+        .padding-left-5 {
+            margin-bottom: 10px;
         }
     }
 </style>
@@ -17,8 +26,12 @@
         <Row>
             <Col span="24">
                 <Card>
-                    <h3>商品信息</h3>
-                    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+                    <p slot="title">商品信息</p>
+                    <a href="#/product/index/list" slot="extra">
+                        <Icon type="chevron-left"></Icon>
+                        返回商品列表页
+                    </a>
+                    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
                         <Row>
                             <Col span="12">
                                 <FormItem label="商品名称" prop="title">
@@ -28,11 +41,11 @@
                                 <FormItem label="分类" prop="category">
                                     <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in categories" :key="index" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                     <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in subCategories" :key="index" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                     <div>
                                         <span>
@@ -42,20 +55,8 @@
                                         </span>
                                     </div>
                                 </FormItem>
-                                <FormItem label="价格" prop="amount">
-                                    <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
-                                </FormItem>
-                                 <FormItem label="VIP 价格" prop="amount">
-                                    <Input v-model="formValidate.vip_amount" placeholder="商品VIP 价格"></Input>
-                                </FormItem>
 
-                                <FormItem label="商品简介" prop="summary">
-                                    <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                                        placeholder="商品简介"></Input>
-                                </FormItem>
-                            </Col>
-                            <Col span="12">
-                                <FormItem label="排序" prop="sort">
+                                 <FormItem label="排序" prop="sort">
                                     <Input v-model="formValidate.sort" placeholder="排序"></Input>
                                 </FormItem>
                                 <FormItem label="是否上架" prop="status">
@@ -72,13 +73,29 @@
                                         <Checkbox value=4  label="墨尔本同城派送"></Checkbox>
                                     </CheckboxGroup>
                                 </FormItem>
+                               
+
+                                <FormItem label="商品简介" prop="summary">
+                                    <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                                        placeholder="商品简介"></Input>
+                                </FormItem>
+                            </Col>
+                            <Col span="12">
+                                <FormItem label="价格" prop="amount">
+                                    <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
+                                </FormItem>
+                                <FormItem label="黄金会员价格" prop="gold_amount">
+                                    <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格"></Input>
+                                </FormItem>
+                                <FormItem label="铂金会员价格" prop="platinum_amount">
+                                    <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格"></Input>
+                                </FormItem>
+                                <FormItem label="钻石会员价格" prop="diamond_amount">
+                                    <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
+                                </FormItem>
                             </Col>
                         </Row>
-                        <FormItem>
-                            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-                            <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">Reset
-                            </Button>
-                        </FormItem>
+                        
                     </Form>
                 </Card>
             </Col>
@@ -86,7 +103,7 @@
         <Row>
             <Col span="24">
                 <Card class="product-description">
-                    <h3>商品属性（Sku）</h3>
+                    <p slot="title">商品属性（Sku）</p>
                     <Form ref="skuItems" :model="skuItems">
                         <FormItem
                                 v-for="(item, index) in skuItems.items"
@@ -96,7 +113,7 @@
                                 :prop="'items.' + index + '.value'"
                                 :rules="skuRuleValidate">
                             <Row>
-                                <Col span="3">
+                                <Col span="4" style="width:155px;">
                                     <Select v-model="item.attr_value_id">
                                         <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index" :label="attrName.name">
                                             <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">
@@ -105,21 +122,30 @@
                                         </OptionGroup>
                                     </Select>
                                 </Col>
-                            <Col span="3" class="padding-left-5">
+                                <Col span="4" class="padding-left-5">
                                     <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
                                 </Col>
-                                <Col span="3" class="padding-left-5">
+                                <Col span="4" class="padding-left-5">
                                     <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
                                 </Col>
-                                <Col span="3" class="padding-left-5">
-                                    <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
-                                </Col>
-                                <Col span="3" class="padding-left-5">
-                                    <Input type="text" v-model="item.vip_amount" placeholder="请输入VIP价格"></Input>
-                                </Col>
-                                <Col span="3" class="padding-left-5">
+                                <Col span="4" class="padding-left-5">
                                     <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
                                 </Col>
+                            </Row>
+                            <Row class="marin-left-33">
+                                <Col span="4" class="padding-left-5">
+                                    <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
+                                </Col>
+                                <Col span="4" class="padding-left-5">
+                                    <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
+                                </Col>
+                                <Col span="4" class="padding-left-5">
+                                    <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
+                                </Col>
+                                <Col span="4" class="padding-left-5">
+                                    <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石价格"></Input>
+                                </Col>
+                                
                                 <Col span="3" class="padding-left-5">
                                     <Button type="ghost" @click="handleRemove(index)">删除</Button>
                                 </Col>
@@ -140,7 +166,7 @@
         <Row>
             <Col span="24">
                 <Card class="product-description">
-                    <h3>商品图片</h3>
+                    <p slot="title">商品图片</h3>
                     <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
                         <template v-if="item.status === 'finished'">
                             <img :src="item.url">
@@ -180,8 +206,11 @@
         <Row>
             <Col span="24">
                 <Card class="product-description">
-                    <h3>商品描述</h3>
+                    <p slot="title">商品描述</p>
                     <UEditor v-model="formValidate.description"></UEditor>
+                    <p class="bottom-button">
+                        <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
+                    </p>
                 </Card>
             </Col>
         </Row>
@@ -246,18 +275,18 @@
                         this.formValidate.items = this.skuItems.items;
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
-                                this.$router.push({
-                                    path: '/product/index/list'
-                                });
+                                // this.$router.push({
+                                //     path: '/product/index/list'
+                                // });
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
                                 this.$Message.error('更新失败');
                             });
                         } else {
                             this.$axios.post('/admin/products', this.formValidate).then((res) => {
-                                this.$router.push({
-                                    path: '/product/index/list'
-                                });
+                                // this.$router.push({
+                                //     path: '/product/index/list'
+                                // });
                                 this.$Message.success('Success!');
                             }).catch((res) => {
                                 this.$Message.error('添加商品失败');

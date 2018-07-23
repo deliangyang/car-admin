@@ -22,11 +22,13 @@
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80
                     },
                     {
                         title: '名称',
                         key: 'title',
+                        width: 200,
                         render: (h, params) => {
                             let productName = params.row.product.title
                             let skuName = params.row.sku.name

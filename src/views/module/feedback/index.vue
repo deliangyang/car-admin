@@ -96,7 +96,10 @@
             };
         },
         created() {
-            this.loadFeedback(1);
+            this.loadFeedback(1)
+        },
+        updated () {
+            
         },
         computed: {},
         methods: {
