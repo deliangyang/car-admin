@@ -29,15 +29,18 @@ export default {
             tableColums: [
                 {
                     title: '编号',
-                    key: 'id'
+                    key: 'id',
+                    width: 80,
                 },
                 {
-                    title: '名称',
-                    key: 'name'
+                    title: '标题',
+                    key: 'title',
+                    width: 120
                 },
                 {
-                    title: '排序',
-                    key: 'sort'
+                    title: '内容',
+                    key: 'content',
+                    width: 300
                 },
                 {
                     title: '创建于',
@@ -95,6 +98,18 @@ export default {
                 this.page_size = res.data.per_page
             }).catch((res) => {
 
+            })
+        },
+        show (index) {
+            this.$router.push({
+                path: '/common/system/notice/add-update?id=' + this.sysNotice[index].id
+            })
+        },
+        remove (index) {
+            let id = this.sysNotice[index].id
+            this.$axios.delete('/admin/system/notice/' + id).then((res) => {
+                this.$Message.success('删除成功');
+                this.sysNotice.splice(index, 1);
             })
         }
     },

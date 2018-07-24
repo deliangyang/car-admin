@@ -4,64 +4,30 @@
 <template>
     <div>
         <Card>
+            <p slot="title">系统公告</p>
             <Form ref="sysNotice" :model="sysNotice" :rules="ruleValidate" :label-width="80">
                 <Row>
                     <Col span="12">
-                        <FormItem label="内容">
+                        <FormItem label="标题" prop="title">
+                            <Input v-model="sysNotice.title" type="text" placeholder="标题"></Input>
+                        </FormItem>
+                        <FormItem label="内容" prop="content">
                             <Input v-model="sysNotice.content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="内容"></Input>
                         </FormItem>
 
-                        <FormItem label="类型">
+                        <!-- <FormItem label="类型">
                             <Select v-model="sysNotice.type" style="width:200px" :disabled="!!primaryId">
                                 <Option :value="1">文字</Option>
                                 <Option :value="2">图文</Option>
                                 <Option :value="3">视频分享</Option>
                             </Select>
-                        </FormItem>
+                        </FormItem> -->
 
                         <FormItem label="状态">
                             <Select v-model="sysNotice.status" style="width:200px">
                                 <Option :value="0">禁用</Option>
                                 <Option :value="1">启用</Option>
                             </Select>
-                        </FormItem>
-
-                        <FormItem label="图片或视频" v-if="this.sysNotice.type !== 1">
-                            <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
-                                <template v-if="item.status === 'finished'">
-                                    <video v-if="item.type==='video'" :src="item.url" style="width:100%;height:100%"></video>
-                                    <img v-else :src="item.url">
-                                    <div class="demo-upload-list-cover">
-                                        <Icon type="ios-eye-outline" @click.native="handleView(item.url, item.name)"></Icon>
-                                        <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                                </template>
-                            </div>
-                            <Upload ref="upload"
-                                    name="image"
-                                    :show-upload-list="false"
-                                    :default-file-list="defaultList"
-                                    :on-success="handleSuccess"
-                                    :format="['jpg','jpeg','png', 'mp4']"
-                                    :max-size="2048"
-                                    :on-format-error="handleFormatError"
-                                    :on-exceeded-size="handleMaxSize"
-                                    :before-upload="handleBeforeUpload"
-                                    multiple
-                                    type="drag"
-                                    :action="uploadImageUrl"
-                                    style="display: inline-block;width:58px;">
-                                <div style="width: 58px;height:58px;line-height: 58px;">
-                                    <Icon type="camera" size="20"></Icon>
-                                </div>
-                            </Upload>
-                            <Modal title="View Image" v-model="visible">
-                                <img :src="showImage" v-if="visible" style="width: 100%">
-                            </Modal>
-                            <Alert show-icon>请勿更换上传的媒体数据类型</Alert>
                         </FormItem>
 
                         <FormItem>
@@ -79,11 +45,19 @@ export default {
     data () {
         return {
             primaryId: 0,
-            sysNotice: {}
+            sysNotice: {},
+            ruleValidate: {
+                title: [
+                    { required: true, message: '标题不能为空', trigger: 'blur' }
+                ],
+                content: [
+                    { required: true, message: '内容不能为空', trigger: 'blur' }
+                ]
+            }
         }
     },
     created () {
-        let query = this.$router.query
+        let query = this.$route.query
         this.primaryId = query.id ? query.id : 0
     },
     methods: {
@@ -93,8 +67,46 @@ export default {
             }).catch((res) => {
 
             })
+        },
+        handleSubmit (name) {
+            console.log(name)
+            this.$refs[name].validate((valid) => {
+                console.log(valid)
+                if (valid) {
+                    if (this.primaryId > 0) {
+                        this.updataSysNotice(this.primaryId, this.sysNotice)                        
+                    } else {
+                        this.addSysNotice(this.sysNotice)
+                    }
+                } else {
+                    this.$Message.error('验证失败')
+                }
+            })
+        },
+        addSysNotice(data) {
+            console.log(data)
+            this.$axios.post('/admin/system/notice', data).then((res) => {
+                this.$Message.success('添加成功')
+                this.$router.push({
+                    path: '/common/system/notice'
+                })
+            }).catch((res) => {
+                this.$Message.error(res.message)
+            })
+        },
+
+        updataSysNotice(id, data) {
+            this.$axios.put('/admin/system/notice/' + id, data).then((res) => {
+                this.$Message.success('编辑成功')
+                this.$router.push({
+                    path: '/common/system/notice'
+                })
+            }).catch((res) => {
+                this.$Message.error(res.message)
+            })
         }
     },
+
     mounted () {
         if (this.primaryId) {
             this.loadSysNotice(this.primaryId)
