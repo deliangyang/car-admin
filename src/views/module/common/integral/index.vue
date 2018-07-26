@@ -9,11 +9,14 @@
             <p slot="title">
                 <Row>
                     <Col span="20">
-                        <div>快递管理</div>
+                        <div>积分等级</div>
                     </Col>
                 </Row>
             </p>
-            <Table border :columns="tableColums" :data="dataExpress" ref="table"></Table>
+            <Table border :columns="tableColums" :data="integral" ref="table"></Table>
+            <Modal title="View Image" v-model="visible">
+                <img :src="showImage" v-if="visible" class="show-image-box">
+            </Modal>
         </Card>
     </div>
 </template>
@@ -21,7 +24,9 @@
 export default {
     data () {
         return {
-            express: [],
+            showImage: '',
+            visible: false,
+            integral: [],
             page_size: 20,
             current_page: 1,
             total: 0,
@@ -32,19 +37,23 @@ export default {
                 },
                 {
                     title: '名称',
-                    key: 'title'
+                    key: 'name'
                 },
                 {
-                    title: '价格',
-                    key: 'amount'
-                },
-                 {
-                    title: '排序',
-                    key: 'sort'
+                    title: '积分',
+                    key: 'integral',
                 },
                 {
-                    title: '描述',
-                    key: 'description'
+                    title: '备注',
+                    key: 'remarks'
+                },
+                {
+                    title: '创建于',
+                    key: 'created_at'
+                },
+                {
+                    title: '编辑于',
+                    key: 'updated_at'
                 },
                 {
                     title: '操作',
@@ -65,17 +74,6 @@ export default {
                                     }
                                 }
                             }, '编辑'),
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.remove(params.index)
-                                    }
-                                }
-                            }, '删除')
                         ]);
                     }
                 }
@@ -86,9 +84,9 @@ export default {
 
     },
     methods: {
-        loadexpressConfig () {
-            this.$axios.get('/admin/express').then((res) => {
-                this.express = res.data
+        loadintegral () {
+            this.$axios.get('/admin/integral/config').then((res) => {
+                this.integral = res.data
                 this.total = res.data.total
                 this.current_page = res.data.current_page
                 this.page_size = res.data.per_page
@@ -96,35 +94,30 @@ export default {
 
             })
         },
+        showTheImage (image) {
+            console.log(image)
+            this.showImage = image
+            this.visible = true
+        },
         show (index) {
             this.$router.push({
-                path: '/common/express/create-update',
+                path: '/common/integral/create-update',
                 query: {
-                    id: this.express[index].id
+                    id: this.integral[index].id
                 }
             });
         },
         remove (index) {
-            this.$axios.delete('/admin/express/' + this.express[index].id).then((res) => {
+            this.$axios.delete('/admin/integral/config' + this.integral[index].id).then((res) => {
                 console.log(res)
-                this.expressConfig.splice(index, 1);
+                this.integral.splice(index, 1);
                 this.$Message.success('删除成功')
             });
             
         }
     },
     mounted () {
-        this.loadexpressConfig()
-    },
-    computed: {
-        dataExpress: function() {
-            let data = []
-            this.express.forEach((element) => {
-                element.amount = '$ ' + (element.amount / 100).toFixed(2) + ' AUD'
-                data.push(element)
-            })
-            return data
-        }
+        this.loadintegral()
     }
 }
 </script>
