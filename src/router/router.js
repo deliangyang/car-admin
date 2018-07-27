@@ -87,7 +87,8 @@ export const otherRouter = {
         {path: 'common/rollscreen/create-update', name:'roll-screen-update-create', title: '添加轮播图', component: () => import('@/views/module/common/rollscreen/create-update.vue')},
         {path: 'common/system/notice/add-update', name:'sys-notice-add-update', title: '更新公告', component: () => import('@/views/module/sys/notice/add-update.vue')},
         {path: 'common/category/add-update', name:'category-add-update', title: '更新分类', component: () => import('@/views/module/category/add-update.vue')},
-
+        {path: 'common/integral/create-update', name:'integral-config-add-update', title: '更新积分配置', component: () => import('@/views/module/common/integral/create-update.vue')},
+        {path: 'common/express/create-update', name:'express-create-update', title: '更新快递', component: () => import('@/views/module/common/express/create-update.vue')},
     ]
 };
 
@@ -192,6 +193,22 @@ export const appRouter = [
                 name: 'order-list',
                 title: '订单列表',
                 component: () => import('@/views/module/order/list.vue')
+            },
+        ]
+    },
+    {
+        path: '/coupon',
+        icon: 'social-usd',
+        name: 'coupon',
+        title: '优惠券管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'social-usd',
+                name: 'coupon-list',
+                title: '优惠券列表',
+                component: () => import('@/views/module/coupon/list.vue')
             },
         ]
     },
@@ -310,6 +327,7 @@ export const appRouter = [
                 title: '首页分类',
                 component: () => import('@/views/module/category/list.vue')
             },
+            {path: 'integral/config', name:'integral-config-index', title: '积分配置', component: () => import('@/views/module/common/integral/index.vue')},
         ]
     },
     {
@@ -319,7 +337,7 @@ export const appRouter = [
         title: '快递管理',
         component: Main,
         children: [
-            {path: 'express', name:'express-list', title: '快递列表', component: () => import('@/views/module/common/express/index.vue')},
+            {path: 'index', name:'express-list', title: '快递列表', component: () => import('@/views/module/common/express/index.vue')},
         ]
     },
     {

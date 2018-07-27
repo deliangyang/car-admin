@@ -78,24 +78,36 @@
             <Card class="order-item-box">
                 <p slot="title">
                     <Row>
-                        <Col span="8">订单编号：{{item.order_no}}</Col>
-                        <Col span="8">买家：{{item.user_id}}</Col>
-                        <Col span="8" class="order-status">状态：
+                        <Col span="4">订单编号：{{item.order_no}}</Col>
+                        <Col span="4" class="order-status">状态：
                             <span v-if="item.status == -1 || item.status == 0">
                                 订单已关闭
                             </span>
                             <span v-else-if="item.status == 1">
                                 等待买家付款
                             </span>
+                            <span style="color:green" v-else-if="item.status == 2">
+                                已付款
+                            </span>
                         </Col>
+                        <Col span="4">
+                            <a @click="showUserInfo(index)">买家：{{item.user.nickname}}</a>
+                        </Col>
+                        <Col span="4">联系方式：{{item.user.mobile}}</Col>
                     </Row>
                 </p>
                 <Row>
                     <Table border :columns="orderItemColumns" :data="item.items"></Table>
                 </Row>
                 <Row class="total-info">
-                    <Col span="2" offset="22">
+                    <Col span="2">
                         <Button @click="goToOrderDetailPage(item.id)" type="success">查看详情</Button>
+                    </Col>
+                    <Col span="2">
+                        <Button v-if="item.address > 0" @click="goToOrderDetailPage(item.id)" type="primary">查看快递</Button>
+                    </Col>
+                    <Col span="2" v-if="item.status === 1">
+                        <Button type="error">完成付款</Button>
                     </Col>
                 </Row>
             </Card>
@@ -136,7 +148,7 @@
                         title: '金额(AUD)',
                         key: 'amount',
                         render: (h, params) => {
-                            return h('div', '$ ' + (params.row.amount / 100).toFixed(2))
+                            return h('div', 'AU$ ' + (params.row.amount / 100).toFixed(2))
                         }
                     },
                     {
@@ -184,6 +196,13 @@
                 let params = this.search
                 params.page = 1
                 this.getOrderList(params)
+            },
+            showUserInfo (index) {
+                // let user = this.user[index].user
+                //  this.$Modal.info({
+                //     title: user.nickname,
+                //     content: `Name：user.nickname<br>：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+                // })
             }
         },
 

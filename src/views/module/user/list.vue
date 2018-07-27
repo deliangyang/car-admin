@@ -97,6 +97,15 @@
                         width: 150
                     },
                     {
+                        title: '地址',
+                        key: 'address',
+                        width: 200,
+                        render: (h, params) => {
+                            let address = params.row.country + ' ' + params.row.province + ' ' + params.row.city
+                            return h('div', address)
+                        }
+                    },
+                    {
                         title: 'openId',
                         key: 'open_id',
                         width: 240
@@ -105,6 +114,11 @@
                         title: '会员',
                         key: 'title',
                         width: 100
+                    },
+                    {
+                        title: '注册时间',
+                        key: 'created_at',
+                        width: 150
                     },
                     {
                         title: '操作',

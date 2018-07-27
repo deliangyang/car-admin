@@ -15,8 +15,11 @@
         }
         .marin-left-33 {
             margin-left: 33px;
+        }   
+        .sku-item-box {
+            margin: 10px;
         }
-        .padding-left-5 {
+        .ivu-form-item {
             margin-bottom: 10px;
         }
     }
@@ -25,193 +28,194 @@
     <div class="product-box">
         <Row>
             <Col span="24">
-                <Card>
-                    <p slot="title">商品信息</p>
-                    <a href="#/product/index/list" slot="extra">
-                        <Icon type="chevron-left"></Icon>
-                        返回商品列表页
-                    </a>
-                    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+            <Card>
+                <p slot="title">商品信息</p>
+                <a href="#/product/index/list" slot="extra">
+                    <Icon type="chevron-left"></Icon>
+                    返回商品列表页
+                </a>
+                <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+                    <Row>
+                        <Col span="12">
+                            <FormItem label="商品名称" prop="title">
+                                <Input v-model="formValidate.title" placeholder="商品名称"></Input>
+                            </FormItem>
+
+                            <FormItem label="分类" prop="category">
+                                <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
+                                    <Option value="0">未选择</Option>
+                                    <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
+                                </Select>
+                                <Select class="product-category" @on-change="changeSubCategory"
+                                        v-model="formValidate.sub_category" placeholder="商品子分类">
+                                    <Option value="0">未选择</Option>
+                                    <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}
+                                    </Option>
+                                </Select>
+                                <div>
+                                    <span>
+                                        <router-link to="/product/category/create-update">
+                                            <Icon type="help-circled"></Icon> 去添加分类？
+                                        </router-link>
+                                    </span>
+                                </div>
+                            </FormItem>
+
+                            <FormItem label="排序" prop="sort">
+                                <Input v-model="formValidate.sort" placeholder="排序"></Input>
+                            </FormItem>
+                            <FormItem label="是否上架" prop="status">
+                                <RadioGroup v-model="formValidate.status">
+                                    <Radio label="0">下架</Radio>
+                                    <Radio label="1">上架</Radio>
+                                </RadioGroup>
+                            </FormItem>
+                            <FormItem label="快递方式" prop="express_type">
+                                <CheckboxGroup v-model="formValidate.express_type">
+                                    <Checkbox value=1 label="不支持混寄"></Checkbox>
+                                    <Checkbox value=2 label="支持混寄"></Checkbox>
+                                    <Checkbox value=3 label="门店自取"></Checkbox>
+                                    <Checkbox value=4 label="墨尔本同城派送"></Checkbox>
+                                </CheckboxGroup>
+                            </FormItem>
+
+                            <FormItem label="商品简介" prop="summary">
+                                <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                                    placeholder="商品简介"></Input>
+                            </FormItem>
+                        </Col>
+                        <Col span="12">
+                            <FormItem label="价格" prop="amount">
+                                <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
+                            </FormItem>
+                            <FormItem label="黄金会员价格" prop="gold_amount">
+                                <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格"></Input>
+                            </FormItem>
+                            <FormItem label="铂金会员价格" prop="platinum_amount">
+                                <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格"></Input>
+                            </FormItem>
+                            <FormItem label="钻石会员价格" prop="diamond_amount">
+                                <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
+                            </FormItem>
+                        </Col>
+                    </Row>
+
+                </Form>
+            </Card>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="24">
+            <Card class="product-description">
+                <!-- <p slot="title">商品属性（Sku）</p> -->
+                <Form ref="skuItems" :model="skuItems" :label-width="80">
+                    <Row>
+                        <Col span="6" v-for="(item, index) in skuItems.items" :key="index" class="sku-item">
+                            <FormItem v-if="item.status" :prop="'items.' + index + '.value'" :rules="skuRuleValidate">
+                                <Card class="sku-item-box">
+                                    <p slot="title">Sku-{{item.index}}</p>
+                                    <p label="sku">
+                                        <Select v-model="item.attr_value_id">
+                                            <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index"
+                                                            :label="attrName.name">
+                                                <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">
+                                                    {{ obj.name }} {{ attrName.unit}}
+                                                </Option>
+                                            </OptionGroup>
+                                        </Select>
+                                    </p>
+                                    <p label="库存">
+                                        <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
+                                    </p>
+                                    <p label="销量">
+                                        <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
+                                    </p>
+                                    <p label="优惠">
+                                        <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
+                                    </p>
+                                    <p label="价格">
+                                        <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
+                                    </p>
+                                    <p label="黄金会员价格">
+                                        <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
+                                    </p>
+                                    <p label="铂金会员价格">
+                                        <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
+                                    </p>
+                                    <p label="砖石会员价格">
+                                        <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石会员价格"></Input>
+                                    </p>
+                                    <p>
+                                        <Button type="ghost" @click="handleRemove(index)">删除</Button>
+                                    </p>
+                                </Card>
+                            </FormItem>
+                        </Col>
+                    </Row>
+
+                    <FormItem>
                         <Row>
-                            <Col span="12">
-                                <FormItem label="商品名称" prop="title">
-                                    <Input v-model="formValidate.title" placeholder="商品名称"></Input>
-                                </FormItem>
-
-                                <FormItem label="分类" prop="category">
-                                    <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
-                                        <Option value="0">未选择</Option>
-                                        <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
-                                    </Select>
-                                    <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
-                                        <Option value="0">未选择</Option>
-                                        <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}</Option>
-                                    </Select>
-                                    <div>
-                                        <span>
-                                            <router-link to="/product/category/create-update">
-                                                <Icon type="help-circled"></Icon> 去添加分类？
-                                            </router-link>
-                                        </span>
-                                    </div>
-                                </FormItem>
-
-                                 <FormItem label="排序" prop="sort">
-                                    <Input v-model="formValidate.sort" placeholder="排序"></Input>
-                                </FormItem>
-                                <FormItem label="是否上架" prop="status">
-                                    <RadioGroup v-model="formValidate.status">
-                                        <Radio label="0">下架</Radio>
-                                        <Radio label="1">上架</Radio>
-                                    </RadioGroup>
-                                </FormItem>
-                                <FormItem label="快递方式" prop="express_type">
-                                    <CheckboxGroup v-model="formValidate.express_type">
-                                        <Checkbox value=1 label="不支持混寄"></Checkbox>
-                                        <Checkbox value=2 label="支持混寄"></Checkbox>
-                                        <Checkbox value=3 label="门店自取"></Checkbox>
-                                        <Checkbox value=4  label="墨尔本同城派送"></Checkbox>
-                                    </CheckboxGroup>
-                                </FormItem>
-                               
-
-                                <FormItem label="商品简介" prop="summary">
-                                    <Input v-model="formValidate.summary" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                                        placeholder="商品简介"></Input>
-                                </FormItem>
-                            </Col>
-                            <Col span="12">
-                                <FormItem label="价格" prop="amount">
-                                    <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
-                                </FormItem>
-                                <FormItem label="黄金会员价格" prop="gold_amount">
-                                    <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格"></Input>
-                                </FormItem>
-                                <FormItem label="铂金会员价格" prop="platinum_amount">
-                                    <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格"></Input>
-                                </FormItem>
-                                <FormItem label="钻石会员价格" prop="diamond_amount">
-                                    <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
-                                </FormItem>
+                            <Col span="8" offset="8">
+                            <Button type="dashed" long @click="handleAdd()" icon="plus-round">添加Sku</Button>
                             </Col>
                         </Row>
-                        
-                    </Form>
-                </Card>
-            </Col>
-        </Row>
-        <Row>
-            <Col span="24">
-                <Card class="product-description">
-                    <p slot="title">商品属性（Sku）</p>
-                    <Form ref="skuItems" :model="skuItems">
-                        <FormItem
-                                v-for="(item, index) in skuItems.items"
-                                v-if="item.status"
-                                :key="index"
-                                :label="'Sku ' + item.index"
-                                :prop="'items.' + index + '.value'"
-                                :rules="skuRuleValidate">
-                            <Row>
-                                <Col span="4" style="width:155px;">
-                                    <Select v-model="item.attr_value_id">
-                                        <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index" :label="attrName.name">
-                                            <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">
-                                                {{ obj.name }} {{ attrName.unit}}
-                                            </Option>
-                                        </OptionGroup>
-                                    </Select>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
-                                </Col>
-                            </Row>
-                            <Row class="marin-left-33">
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
-                                </Col>
-                                <Col span="4" class="padding-left-5">
-                                    <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石价格"></Input>
-                                </Col>
-                                
-                                <Col span="3" class="padding-left-5">
-                                    <Button type="ghost" @click="handleRemove(index)">删除</Button>
-                                </Col>
-                            </Row>
-                        </FormItem>
-                        <FormItem>
-                            <Row>
-                                <Col span="8" offset="8">
-                                    <Button type="dashed" long @click="handleAdd()" icon="plus-round">添加Sku</Button>
-                                </Col>
-                            </Row>
-                        </FormItem>
-                    </Form>
-                </Card>
+                    </FormItem>
+                </Form>
+            </Card>
             </Col>
         </Row>
 
         <Row>
             <Col span="24">
-                <Card class="product-description">
-                    <p slot="title">商品图片</h3>
-                    <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
-                        <template v-if="item.status === 'finished'">
-                            <img :src="item.url">
-                            <div class="demo-upload-list-cover">
-                                <Icon type="ios-eye-outline" @click.native="handleView(item.url, item.name)"></Icon>
-                                <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                        </template>
-                    </div>
-                    <Upload ref="upload"
-                            name="image"
-                            :show-upload-list="false"
-                            :default-file-list="defaultList"
-                            :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png']"
-                            :max-size="2048"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :before-upload="handleBeforeUpload"
-                            multiple
-                            type="drag"
-                            :action="uploadImageUrl"
-                            style="display: inline-block;width:58px;">
-                        <div style="width: 58px;height:58px;line-height: 58px;">
-                            <Icon type="camera" size="20"></Icon>
+            <Card class="product-description">
+                <p slot="title">商品图片</p>
+                <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+                    <template v-if="item.status === 'finished'">
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url, item.name)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
                         </div>
-                    </Upload>
-                    <Modal title="View Image" v-model="visible">
-                        <img :src="showImage" v-if="visible" style="width: 100%">
-                    </Modal>
-                </Card>
+                    </template>
+                    <template v-else>
+                        <progress v-if="item.showProgress" :percent="item.percentage" hide-info></progress>
+                    </template>
+                </div>
+                <Upload ref="upload"
+                        name="image"
+                        :show-upload-list="false"
+                        :default-file-list="defaultList"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png']"
+                        :max-size="2048"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleBeforeUpload"
+                        multiple
+                        type="drag"
+                        :action="uploadImageUrl"
+                        style="display: inline-block;width:58px;">
+                    <div style="width: 58px;height:58px;line-height: 58px;">
+                        <Icon type="camera" size="20"></Icon>
+                    </div>
+                </Upload>
+                <Modal title="View Image" v-model="visible">
+                    <img :src="showImage" v-if="visible" style="width: 100%">
+                </Modal>
+            </Card>
             </Col>
         </Row>
         <Row>
             <Col span="24">
-                <Card class="product-description">
-                    <p slot="title">商品描述</p>
-                    <UEditor v-model="formValidate.description"></UEditor>
-                    <p class="bottom-button">
+            <Card class="product-description">
+                <p slot="title">商品描述</p>
+                <UEditor v-model="formValidate.description"></UEditor>
+                <Form>
+                    <FormItem class="bottom-button">
                         <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-                    </p>
-                </Card>
+                    </FormItem>
+                </Form>
+            </Card>
             </Col>
         </Row>
     </div>
@@ -220,11 +224,12 @@
     import UEditor from '@/views/module/common/uEditor.vue';
     import skuRuleValidate from '@/validate/product';
     import util from '@/libs/util';
+
     export default {
         components: {
             UEditor
         },
-        data () {
+        data() {
             return {
                 uploadImageUrl: util.imageUploadUrl,
                 index: 1,
@@ -258,7 +263,7 @@
                 subCategories: [],
                 ruleValidate: {
                     title: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        {required: true, message: 'The name cannot be empty', trigger: 'blur'}
                     ]
                 },
                 skuRuleValidate: skuRuleValidate,
@@ -269,9 +274,9 @@
             };
         },
         methods: {
-            handleSubmit (name) {
+            handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
-                    if (valid) {
+                    if(valid) {
                         this.formValidate.items = this.skuItems.items;
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
@@ -280,27 +285,24 @@
                                 // });
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
-                                this.$Message.error('更新失败');
+                                    this.$Message.error('更新失败');
                             });
                         } else {
                             this.$axios.post('/admin/products', this.formValidate).then((res) => {
-                                // this.$router.push({
-                                //     path: '/product/index/list'
-                                // });
-                                this.$Message.success('Success!');
-                            }).catch((res) => {
-                                this.$Message.error('添加商品失败');
-                            });
-                        }
+                                    this.$Message.success('Success!');
+                                }).catch((res) => {
+                                        this.$Message.error('添加商品失败');
+                                });
+                            }
                     } else {
                         this.$Message.error('Fail!');
                     }
                 });
             },
-            handleReset (name) {
+            handleReset(name) {
                 this.$refs[name].resetFields();
             },
-            handleAdd () {
+            handleAdd() {
                 this.skuItems.items.push({
                     index: this.index++,
                     status: 1,
@@ -313,18 +315,19 @@
                     discount: ''
                 });
             },
-            handleRemove (index) {
+            handleRemove(index) {
                 this.skuItems.items[index].status = 0;
                 let skuId = this.skuItems.items[index].id;
                 if (skuId > 0) {
                     this.$axios.delete('/admin/product/sku/' + skuId).then((res) => {
                         this.$Message.success('成功移除sku');
-                    }).catch((res) => {
-                        this.$Message.error('移除sku失败');
-                    });
+                }).catch((res) => {
+                    this.$Message.error('移除sku失败');
+                })
+                    ;
                 }
             },
-            queryAllParentCategory (pid) {
+            queryAllParentCategory(pid) {
                 let query = {
                     pid: pid
                 };
@@ -336,22 +339,23 @@
                     }
                 });
             },
-            querySubCategories (pid) {
+            querySubCategories(pid) {
                 this.queryAllParentCategory(pid);
             },
-            getAttrNames (category, subCategory) {
+            getAttrNames(category, subCategory) {
                 let query = {
                     category: category,
                     sub_category: subCategory
                 };
                 this.$axios.get('/admin/product/attr', {params: query}).then((res) => {
                     this.attrNames = res.data;
-                });
+            })
+                ;
             },
-            changeSubCategory () {
+            changeSubCategory() {
                 this.getAttrNames(this.formValidate.category, this.formValidate.sub_category);
             },
-            handleSuccess (res, file) {
+            handleSuccess(res, file) {
                 file.url = res.src;
                 file.name = res.filename;
                 this.formValidate.images.push({
@@ -359,23 +363,23 @@
                     src: res.src
                 });
             },
-            handleFormatError (file) {
+            handleFormatError(file) {
                 this.$Notice.warning({
                     title: 'The file format is incorrect',
                     desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
                 });
             },
-            handleMaxSize (file) {
+            handleMaxSize(file) {
                 this.$Notice.warning({
                     title: 'Exceeding file size limit',
                     desc: 'File  ' + file.name + ' is too large, no more than 2M.'
                 });
             },
-            handleView (imageUrl, name) {
+            handleView(imageUrl, name) {
                 this.showImage = imageUrl;
                 this.visible = true;
             },
-            handleBeforeUpload () {
+            handleBeforeUpload() {
                 const check = this.formValidate.images.length < 50;
                 if (!check) {
                     this.$Notice.warning({
@@ -384,29 +388,27 @@
                 }
                 return check;
             },
-            handleImageRemove (file) {
+            handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
                 this.formValidate.images.splice(fileList.indexOf(file), 1);
                 if (file.id > 0) {
                     this.$axios.delete('/admin/image/' + file.id).then((res) => {
                         this.$Message.success('删除成功');
-                    }).catch((res) => {
-                        this.$Message.error('删除失败');
-                    });
+                }).catch((res) => {
+                    this.$Message.error('删除失败');
+                })
+                    ;
                 }
             }
         },
-        mounted () {
+        mounted() {
             this.uploadList = this.$refs.upload.fileList;
-            console.log('xxxxxxxxxxxxx+xxxx');
             this.queryAllParentCategory(0);
             this.queryAllParentCategory(this.formValidate.category);
         },
-        watch: {
-           
-        },
-        created () {
+        watch: {},
+        created() {
             let query = this.$route.query
             if (query.id) {
                 this.$axios.get('/admin/products/' + query.id).then((res) => {
@@ -434,8 +436,7 @@
                         temp.status = 1;
                         this.skuItems.items.push(temp);
                     }
-                }).catch((res) => {
-                });
+                }).catch((res) => {});
             }
         }
     };
