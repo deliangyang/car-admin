@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import util from '@/libs/util';
+
     export default {
         name: 'list',
         data () {
@@ -21,7 +23,8 @@
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80
                     },
                     {
                         title: '名称',
@@ -34,15 +37,20 @@
                     {
                         title: '图片',
                         key: 'images',
+                        width: 120,
                         render: (h, params) => {
                             if (params.row.image) {
                                 return h('div', [
-                                    h('Avatar', {
-                                        props: {
+                                    h('img', {
+                                        attrs: {
                                             src: params.row.image.src,
                                             shape: 'square',
                                             icon: 'person',
                                             size: 'large'
+                                        },
+                                        style: {
+                                            width: '80px',
+                                            height: '80px'
                                         },
                                         on: {
                                             click: () => {
@@ -56,15 +64,44 @@
                     },
                     {
                         title: '价格',
-                        key: 'amount'
+                        key: 'amount',
+                        width: 120
                     },
                     {
                         title: '库存',
-                        key: 'stock'
+                        key: 'stock',
+                        width: 80
                     },
                     {
                         title: '销量',
-                        key: 'sale'
+                        key: 'sale',
+                        width: 80
+                    },
+                    {
+                        title: '标签',
+                        key: 'tag',
+                        width: 100
+                    },
+                    {
+                        title: '小程序码',
+                        key: 'qr_code',
+                        width: 120,
+                        render: (h, params) => {
+                            return h('img', {
+                                attrs: {
+                                    src: util.HOST + '/' + params.row.qr_code
+                                },
+                                style: {
+                                    width: '80px',
+                                    height: '80px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.handleView(util.HOST + '/' + params.row.qr_code)
+                                    }
+                                }
+                            })
+                        }
                     },
                     {
                         title: '操作',
@@ -86,7 +123,18 @@
                                             this.edit(params.index);
                                         }
                                     }
-                                }, '编辑')
+                                }, '编辑'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.index);
+                                        }
+                                    }
+                                }, '热门')
                             ]);
                         }
                     }
@@ -101,7 +149,7 @@
             newProducts: function() {
                 let tmpProducts = []
                 this.products.forEach(element => {
-                    element.amount = '$ ' + (element.amount / 100).toFixed(2) + ' AUD'
+                    element.amount = 'AU$ ' + (element.amount / 100).toFixed(2)
                     tmpProducts.push(element)
                 });
                 return tmpProducts;
