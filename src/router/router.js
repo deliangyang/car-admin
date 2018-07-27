@@ -86,6 +86,7 @@ export const otherRouter = {
         {path:'found/cicle/create-update', name:'found-cicle-update', title:'编辑发现', component: () => import('@/views/module/found/update.vue')},
         {path: 'common/rollscreen/create-update', name:'roll-screen-update-create', title: '添加轮播图', component: () => import('@/views/module/common/rollscreen/create-update.vue')},
         {path: 'common/system/notice/add-update', name:'sys-notice-add-update', title: '更新公告', component: () => import('@/views/module/sys/notice/add-update.vue')},
+        {path: 'common/category/add-update', name:'category-add-update', title: '更新分类', component: () => import('@/views/module/category/add-update.vue')},
 
     ]
 };

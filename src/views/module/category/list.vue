@@ -11,7 +11,7 @@
                 <Icon type="plus-round"></Icon>
                 添加分类
             </a>
-            <Table border :columns="columns" :data="article" ref="table"></Table>
+            <Table border :columns="columns" :data="categories" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>        
     </div>
@@ -94,7 +94,7 @@
                         }
                     }
                 ],
-                article: [],
+                categories: [],
                 current_page: 1,
                 total: 0
             }
@@ -107,15 +107,12 @@
                 this.$axios.get('/category', {params: {page: page}}).then((res) => {
                     this.total = res.data.total
                     this.current_page = res.data.current_page
-                    this.article = res.data.data
+                    this.categories = res.data.data
                     this.page_size = res.data.per_page
                 })
             },
             show(index) {
-                this.$Modal.info({
-                    title: '文章内容',
-                    content: `${this.article[index].content}`
-                })
+                
             },
             remove(index) {
                 this.users.splice(index, 1);
@@ -124,9 +121,8 @@
                 });
             },
             edit(index, data) {
-                let user_id = this.users[index].user_id
-                this.users.update('/admin/users/' + user_id, {_method: 'delete'}).then((res) => {
-
+                this.$router.push({
+                    path: '/common/category/add-update?id=' + this.categories[index].id
                 })
             },
             exportData(type) {
