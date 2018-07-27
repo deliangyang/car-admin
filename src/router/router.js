@@ -197,6 +197,22 @@ export const appRouter = [
         ]
     },
     {
+        path: '/coupon',
+        icon: 'social-usd',
+        name: 'coupon',
+        title: '优惠券管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'social-usd',
+                name: 'coupon-list',
+                title: '优惠券列表',
+                component: () => import('@/views/module/coupon/list.vue')
+            },
+        ]
+    },
+    {
         path: '/product',
         icon: 'ios-cart-outline',
         name: 'product',
