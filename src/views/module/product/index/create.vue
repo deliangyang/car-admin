@@ -108,13 +108,13 @@
             <Col span="24">
             <Card class="product-description">
                 <!-- <p slot="title">商品属性（Sku）</p> -->
-                <Form ref="skuItems" :model="skuItems">
+                <Form ref="skuItems" :model="skuItems" :label-width="80">
                     <Row>
                         <Col span="6" v-for="(item, index) in skuItems.items" :key="index" class="sku-item">
-                            <Form v-if="item.status" :prop="'items.' + index + '.value'" :rules="skuRuleValidate" :label-width="100">
+                            <FormItem v-if="item.status" :prop="'items.' + index + '.value'" :rules="skuRuleValidate">
                                 <Card class="sku-item-box">
                                     <p slot="title">Sku-{{item.index}}</p>
-                                    <FormItem label="sku">
+                                    <p label="sku">
                                         <Select v-model="item.attr_value_id">
                                             <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index"
                                                             :label="attrName.name">
@@ -123,33 +123,33 @@
                                                 </Option>
                                             </OptionGroup>
                                         </Select>
-                                    </FormItem>
-                                    <FormItem label="库存">
+                                    </p>
+                                    <p label="库存">
                                         <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
-                                    </FormItem>
-                                    <FormItem label="销量">
+                                    </p>
+                                    <p label="销量">
                                         <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
-                                    </FormItem>
-                                    <FormItem label="优惠">
+                                    </p>
+                                    <p label="优惠">
                                         <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
-                                    </FormItem>
-                                    <FormItem label="价格">
+                                    </p>
+                                    <p label="价格">
                                         <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
-                                    </FormItem>
-                                    <FormItem label="黄金会员价格">
+                                    </p>
+                                    <p label="黄金会员价格">
                                         <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
-                                    </FormItem>
-                                    <FormItem label="铂金会员价格">
+                                    </p>
+                                    <p label="铂金会员价格">
                                         <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
-                                    </FormItem>
-                                    <FormItem label="砖石会员价格">
+                                    </p>
+                                    <p label="砖石会员价格">
                                         <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石会员价格"></Input>
-                                    </FormItem>
-                                    <FormItem>
+                                    </p>
+                                    <p>
                                         <Button type="ghost" @click="handleRemove(index)">删除</Button>
-                                    </FormItem>
+                                    </p>
                                 </Card>
-                            </Form>
+                            </FormItem>
                         </Col>
                     </Row>
 
@@ -178,7 +178,7 @@
                         </div>
                     </template>
                     <template v-else>
-                        <FormItemrogress v-if="item.showProgress" :percent="item.percentage" hide-info></FormItemrogress>
+                        <progress v-if="item.showProgress" :percent="item.percentage" hide-info></progress>
                     </template>
                 </div>
                 <Upload ref="upload"
@@ -210,9 +210,11 @@
             <Card class="product-description">
                 <p slot="title">商品描述</p>
                 <UEditor v-model="formValidate.description"></UEditor>
-                <FormItem class="bottom-button">
-                    <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-                </FormItem>
+                <Form>
+                    <FormItem class="bottom-button">
+                        <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
+                    </FormItem>
+                </Form>
             </Card>
             </Col>
         </Row>
@@ -402,7 +404,6 @@
         },
         mounted() {
             this.uploadList = this.$refs.upload.fileList;
-            console.log('xxxxxxxxxxxxx+xxxx');
             this.queryAllParentCategory(0);
             this.queryAllParentCategory(this.formValidate.category);
         },
