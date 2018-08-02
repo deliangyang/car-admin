@@ -1,6 +1,7 @@
 <template>
     <div>
         <Card>
+            <p slot="title">优惠券管理</p>
             <Table border :columns="columns" :data="coupons" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>    
@@ -55,7 +56,7 @@
                     {
                         title: '使用商品',
                         key: 'products',
-                    }
+                    },
                     {
                         title: '优惠',
                         key: 'discount',

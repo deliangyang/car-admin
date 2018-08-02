@@ -89,6 +89,8 @@ export const otherRouter = {
         {path: 'common/category/add-update', name:'category-add-update', title: '更新分类', component: () => import('@/views/module/category/add-update.vue')},
         {path: 'common/integral/create-update', name:'integral-config-add-update', title: '更新积分配置', component: () => import('@/views/module/common/integral/create-update.vue')},
         {path: 'common/express/create-update', name:'express-create-update', title: '更新快递', component: () => import('@/views/module/common/express/create-update.vue')},
+        {path: 'coupon/create-update', name:'coupon-create-update', title: '更新优惠券', component: () => import('@/views/module/coupon/create-update.vue')},
+
     ]
 };
 
