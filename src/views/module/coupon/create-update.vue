@@ -25,7 +25,7 @@
                         </FormItem>
 
                         <FormItem label="有效期">
-                            <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" @on-change="changeQueryOrderTimeRange"
+                            <DatePicker :value="validDate" type="datetimerange" format="yyyy-MM-dd HH:mm:ss" @on-change="changeQueryOrderTimeRange"
                             placeholder="请输入开始时间和结束时间" style="width:100%;"></DatePicker>
                         </FormItem>
                        
@@ -72,6 +72,7 @@ export default {
         return {
             couponId: 0,
             coupon: {},
+            validDate: [],
             ruleValidate: {
                 name: [
                     { required: true, message: '名称不能为空', trigger: 'blur' }
@@ -80,16 +81,20 @@ export default {
                     { required: true, message: '描述不能为空', trigger: 'blur' }
                 ],
                 fill_up: [
-                    { required: true, message: '满减金额不能为空', trigger: 'blur' }
+                    { required: true, message: '满减金额不能为空', trigger: 'blur' },
+                    { type: 'number', message: '满减金额为数字', trigger: 'blur' }
                 ],
                 discount: [
-                    { required: true, message: '优惠金额不能为空', trigger: 'blur' }
+                    { required: true, message: '优惠金额不能为空', trigger: 'blur' },
+                    { type: 'number', message: '优惠金额为数字', trigger: 'blur' }
                 ],
                 count: [
-                    { required: true, message: '总数不能为空', trigger: 'blur' }
+                    { required: true, message: '总数不能为空', trigger: 'blur' },
+                    { type: 'number', message: '总数为数字', trigger: 'blur' }
                 ],
                 stock: [
-                    { required: true, message: '库存不能为空', trigger: 'blur' }
+                    { required: true, message: '库存不能为空', trigger: 'blur' },
+                    { type: 'number', message: '库存为数字', trigger: 'blur' }
                 ],
             },
         }
@@ -100,7 +105,7 @@ export default {
                 console.log(this.coupon)
                 if (valid) {
                      if (this.couponId > 0) {
-                        this.$axios.put('/admin/coupon/config/' + this.couponId, this.coupon).then((res) => {
+                        this.$axios.put('/admin/coupon/' + this.couponId, this.coupon).then((res) => {
                             this.$Message.success('修改成功');
                             this.$router.push({
                                 path: '/coupon/list'
@@ -123,12 +128,15 @@ export default {
             })
         },
         loadcoupon (id) {
-            this.$axios.get('/admin/coupon/config/' + id).then((res) => {
+            this.$axios.get('/admin/coupon/' + id).then((res) => {
                 this.coupon = res.data
+                this.validDate = [
+                    this.coupon.start_at,
+                    this.coupon.expire_at
+                ]
             })
         },
         changeQueryOrderTimeRange (res) {
-            console.log(res)
             this.coupon.start_at = res[0]
             this.coupon.expirt_at = res[1]
         }
@@ -136,7 +144,9 @@ export default {
     created () {
         let query = this.$route.query
         this.couponId = query.id
-        this.loadcoupon(this.couponId)
+        if (this.couponId > 0) {
+            this.loadcoupon(this.couponId)
+        }
     }
 }
 </script>

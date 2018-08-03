@@ -112,7 +112,7 @@
             },
             edit (id) {
                 this.$router.push({
-                    path: '//cicle/create-update',
+                    path: '/coupon/create-update',
                     query: {
                         id: id
                     }
