@@ -55,7 +55,7 @@
                     {
                         title: '使用商品',
                         key: 'products',
-                    }
+                    },
                     {
                         title: '优惠',
                         key: 'discount',
