@@ -1,6 +1,7 @@
 <template>
     <div>
         <Card>
+            <p slot="title">海壳圈管理</p>
             <Table border :columns="columns" :data="foundCircle" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>    

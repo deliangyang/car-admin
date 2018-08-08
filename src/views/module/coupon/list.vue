@@ -1,6 +1,7 @@
 <template>
     <div>
         <Card>
+            <p slot="title">优惠券管理</p>
             <Table border :columns="columns" :data="coupons" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>    
@@ -111,7 +112,7 @@
             },
             edit (id) {
                 this.$router.push({
-                    path: '//cicle/create-update',
+                    path: '/coupon/create-update',
                     query: {
                         id: id
                     }

@@ -1,10 +1,13 @@
 <template>
     <div>
-        <Table border :columns="columns" :data="newProducts" ref="table"></Table>
-        <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-        <Modal title="View Image" v-model="visible">
-            <img :src="showImage" v-if="visible" style="width: 100%">
-        </Modal>
+        <Card>
+            <p slot="title">商品列表</p>
+            <Table border :columns="columns" :data="newProducts" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+            <Modal title="View Image" v-model="visible">
+                <img :src="showImage" v-if="visible" style="width: 100%">
+            </Modal>
+        </Card>
     </div>
 </template>
 
