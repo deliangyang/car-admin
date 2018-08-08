@@ -3,6 +3,7 @@
         <Row>
             <Col>
                 <Card>
+                    <p slot="title">地址列表</p>
                     <Table border :columns="columns" :data="address" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>
@@ -33,7 +34,7 @@
                     {
                         title: '联系方式',
                         key: 'contact',
-                        width: 80
+                        width: 160
                     },
                     {
                         title: '地址',
@@ -42,7 +43,7 @@
                     {
                         title: '街道',
                         key: 'address', 
-                        width: 80        
+                        width: 200        
                     },
                     {
                         title: '详细地址',
@@ -51,6 +52,7 @@
                     {
                         title: '坐标',
                         key: 'point',
+                        width: 200,
                         render: (h, params) => {
                             return h('div', [
                                 h('span', `(${params.row.longitude}, ${params.row.latitude})`)

@@ -2,6 +2,7 @@ import axios from 'axios';
 import env from '../../build/env';
 import semver from 'semver';
 import packjson from '../../package.json';
+import iview from 'iview';
 
 let util = {
 
@@ -20,6 +21,15 @@ const ajaxUrl = env === 'development'
 util.ajax = axios.create({
     baseURL: ajaxUrl,
     timeout: 30000
+});
+
+axios.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+    return response;
+}, function (error) {
+// 对响应错误做点什么
+    iview.$Message.error(error.message)
+    return Promise.reject(error);
 });
 
 util.inOf = function (arr, targetArr) {

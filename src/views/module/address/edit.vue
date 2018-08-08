@@ -6,6 +6,7 @@
         <Row>
             <Col span="24">
                 <Card>
+                    <p slot="title">更新地址</p>
                     <Form ref="formValidate" :model="formValidate" :label-width="80">
                         <Row>
                             <Col span="12">
@@ -16,21 +17,21 @@
                                     <Select @on-change="changeProvince" :value="formValidate.province"
                                             v-model="formValidate.province" placeholder="省份">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in province" v-key="index" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, index) in province" :key="index" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="城市" prop="city">
                                     <Select @on-change="changeCity" :value="formValidate.city"
                                             v-model="formValidate.city" placeholder="城市">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in city" v-key="index" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, index) in city" :key="index" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="区县" prop="country">
                                     <Select v-model="formValidate.country" placeholder="区县" 
                                             :value="formValidate.country">
                                         <Option value="0">未选择</Option>
-                                        <Option v-for="(item, index) in country" v-key="index" :value="item.id">{{item.name}}</Option>
+                                        <Option v-for="(item, index) in country" :key="index" :value="item.id">{{item.name}}</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem label="地址" prop="detail">

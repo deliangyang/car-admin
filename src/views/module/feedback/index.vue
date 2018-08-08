@@ -3,6 +3,7 @@
         <Row>
             <Col>
                 <Card>
+                    <p slot="title">意见反馈</p>
                     <Table border :columns="columns" :data="feedback" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>
@@ -60,8 +61,7 @@
                     },
                     {
                         title: '内容',
-                        key: 'content',
-                        width: 150
+                        key: 'content'
                     },
                     {
                         title: '留言回复',

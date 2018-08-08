@@ -1,13 +1,10 @@
 <template>
     <div>
-        <Row>
-            <Col>
-                <Card>
-                    <Table border :columns="columns" :data="shoppingCart" ref="table"></Table>
-                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-                </Card>
-            </Col>
-        </Row>
+        <Card>
+            <p slot="title">购物车管理</p>
+            <Table border :columns="columns" :data="shoppingCartData" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        </Card>
     </div>
 </template>
 
@@ -40,24 +37,14 @@
                     },
                     {
                         title: '价格',
-                        key: 'amount'
+                        key: 'amount',
+                        width: 140
                     },
                     {
-                        title: '用户编号',
-                        key: 'user_id',
+                        title: '用户',
+                        key: 'user',
                         render: (h, params) => {
-                            return h('div', [
-                                h('div', {
-                                    props: {
-                                        
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.showUser(params.index);
-                                        }
-                                    }
-                                }, 'ID: ' + params.row.user_id)
-                            ])
+                            return h('div', params.row.user.nickname + ' ' + params.row.user.mobile)
                         }
                     },
                     {
@@ -79,7 +66,7 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
+                                        type: 'error',
                                         size: 'small'
                                     },
                                     style: {
@@ -90,7 +77,7 @@
                                             this.edit(params.index);
                                         }
                                     }
-                                }, '编辑')
+                                }, '移除')
                             ]);
                         }
                     }
@@ -101,7 +88,16 @@
         created () {
             this.loadShoppingCart(1);
         },
-        computed: {},
+        computed: {
+            shoppingCartData: function() {
+                return this.shoppingCart.map((element) => {
+                    return {
+                        ...element,
+                        amount: 'AU$ ' + (element.amount / 100).toFixed(2)
+                    }
+                })
+            }
+        },
         methods: {
             loadShoppingCart (page) {
                 let params = {
@@ -118,16 +114,6 @@
             },
             change (page) {
                 this.loadShoppingCart(page);
-            },
-            showUser (index) {
-                let userId = this.shoppingCart[index].user_id
-                this.$axios.get('/admin/users/' + userId).then((res) => {
-                    let user = res.data
-                    this.$Modal.info({
-                        title: user.name,
-                        content: `Country：${user.country}<br>Province：${user.province}<br>City：${user.city}`
-                    })
-                })
             }
         }
     };

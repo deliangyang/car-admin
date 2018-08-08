@@ -3,6 +3,7 @@
         <Row>
             <Col>
                 <Card>
+                    <p slot="title">Sku</p>
                     <Table border :columns="columns" :data="skuValues" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>

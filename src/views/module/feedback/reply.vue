@@ -4,6 +4,7 @@
 <template>
     <div class="product-attr-box">
         <Card>
+            <p slot="title">回复</p>
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <Row>
                     <Col span="12">

@@ -9,6 +9,7 @@
 <template>
     <div>
         <Card class="search-box card-buttom">
+            <p slot="title">搜索用户</p>
             <Form class="form" ref="search" :model="search" :rules="searchRule" inline :label-width="70">
                 <Row>
                     <Col span="6">
@@ -37,6 +38,7 @@
             </Form>
         </Card>
         <Card class="card-buttom">
+            <p slot="title">用户管理</p>
             <Table border :columns="columns" :data="user" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
         </Card>        
@@ -59,8 +61,7 @@
                     },
                     {
                         title: '昵称',
-                        key: 'name',
-                        width: 150
+                        key: 'name'
                     },
                     {
                         title: '性别',

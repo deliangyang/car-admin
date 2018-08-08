@@ -47,11 +47,9 @@
                                     <Option value="0">未选择</Option>
                                     <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
-                                <Select class="product-category" @on-change="changeSubCategory"
-                                        v-model="formValidate.sub_category" placeholder="商品子分类">
+                                <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
                                     <Option value="0">未选择</Option>
-                                    <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}
-                                    </Option>
+                                    <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
                                 <div>
                                     <span>
@@ -61,7 +59,7 @@
                                     </span>
                                 </div>
                             </FormItem>
-
+                           
                             <FormItem label="封面缩略图">
                                 <div class="demo-upload-list" v-for="(item, key) in defaultProductCoverImage" :key="key">
                                     <template v-if="item.status === 'finished'">
@@ -85,7 +83,6 @@
                                     :max-size="2048"
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize"
-                                    :before-upload="handleBeforeUploadProductCover"
                                     multiple
                                     type="drag"
                                     :action="uploadImageUrl"
@@ -267,6 +264,11 @@
         components: {
             UEditor
         },
+        props: {
+            amount: Number,
+            vip_amount: Number,
+            gold_amount: Number
+        },
         data() {
             return {
                 uploadImageUrl: util.imageUploadUrl,
@@ -319,18 +321,15 @@
                         this.formValidate.items = this.skuItems.items;
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
-                                // this.$router.push({
-                                //     path: '/product/index/list'
-                                // });
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
-                                    this.$Message.error('更新失败');
+                                this.$Message.error('更新失败');
                             });
                         } else {
                             this.$axios.post('/admin/products', this.formValidate).then((res) => {
                                     this.$Message.success('Success!');
                                 }).catch((res) => {
-                                        this.$Message.error('添加商品失败');
+                                    this.$Message.error('添加商品失败');
                                 });
                             }
                     } else {
@@ -360,10 +359,9 @@
                 if (skuId > 0) {
                     this.$axios.delete('/admin/product/sku/' + skuId).then((res) => {
                         this.$Message.success('成功移除sku');
-                }).catch((res) => {
-                    this.$Message.error('移除sku失败');
-                })
-                    ;
+                    }).catch((res) => {
+                        this.$Message.error('移除sku失败');
+                    }) ;
                 }
             },
             queryAllParentCategory(pid) {
@@ -375,6 +373,7 @@
                         this.categories = res.data.data;
                     } else {
                         this.subCategories = res.data.data;
+                        this.formValidate.sub_category = this.subCategory
                     }
                 });
             },
@@ -388,11 +387,10 @@
                 };
                 this.$axios.get('/admin/product/attr', {params: query}).then((res) => {
                     this.attrNames = res.data;
-            })
-                ;
+                });
             },
             changeSubCategory() {
-                this.getAttrNames(this.formValidate.category, this.formValidate.sub_category);
+                //this.getAttrNames(this.formValidate.category, this.formValidate.sub_category);
             },
             handleSuccess(res, file) {
                 file.url = res.src;
@@ -405,6 +403,7 @@
             uploadProductCoverImageSuccess (res, file) {
                 file.url = res.src;
                 file.name = res.filename;
+                this.defaultProductCoverImage.splice(0);
                 this.defaultProductCoverImage.push({
                     name: res.filename,
                     url: res.src,
@@ -437,15 +436,6 @@
                 }
                 return check;
             },
-            handleBeforeUploadProductCover () {
-                const check = this.defaultProductCoverImage.length < 1;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: 'Up to one pictures can be uploaded.'
-                    });
-                }
-                return check;
-            },
             handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
@@ -453,32 +443,28 @@
                 if (file.id > 0) {
                     this.$axios.delete('/admin/image/' + file.id).then((res) => {
                         this.$Message.success('删除成功');
-                }).catch((res) => {
-                    this.$Message.error('删除失败');
-                })
-                    ;
+                    }).catch((res) => {
+                        this.$Message.error('删除失败');
+                    });
                 }
-            }
-        },
-        mounted() {
-            this.uploadList = this.$refs.upload.fileList;
-            this.defaultProductCoverImage = this.$refs.cover.fileList
-            this.queryAllParentCategory(0);
-            this.queryAllParentCategory(this.formValidate.category);
-            this.getAttrNames()
-        },
-        watch: {},
-        created() {
-            let query = this.$route.query
-            if (query.id) {
-                this.$axios.get('/admin/products/' + query.id).then((res) => {
+            },
+            loadProduct() {
+                this.$axios.get('/admin/products/' + this.primaryId).then((res) => {
+                    this.subCategory = res.data.sub_category
+                    delete res.data.sub_category
                     this.formValidate = res.data;
                     let skus = res.data.skus;
                     let temp, item;
-                    //this.changeSubCategory();
                     this.skuItems.items[0].status = 0;
                     this.formValidate.express_type = [];
-                    this.primaryId = query.id;
+
+                    if (this.formValidate.cover) {
+                        this.defaultProductCoverImage.push({
+                            name: '',
+                            url: this.formValidate.cover,
+                            status: 'finished'
+                        })  
+                    }
 
                     for (item in res.data.images) {
                         this.uploadList.push({
@@ -496,8 +482,29 @@
                         temp.status = 1;
                         this.skuItems.items.push(temp);
                     }
-                }).catch((res) => {});
+                }).catch((res) => {
+
+                });
             }
+        },
+        mounted() {
+            this.uploadList = this.$refs.upload.fileList;
+            this.defaultProductCoverImage = this.$refs.cover.fileList
+            this.queryAllParentCategory(0);
+            if (this.primaryId > 0) {
+                this.loadProduct()
+            }
+            this.$nextTick((res) => {
+                this.queryAllParentCategory(this.formValidate.category);                
+                this.getAttrNames()
+            })
+        },
+        watch: {
+
+        },
+        created() {
+            let query = this.$route.query
+            this.primaryId = query.id
         }
     };
 </script>
