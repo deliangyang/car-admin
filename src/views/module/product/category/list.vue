@@ -3,6 +3,7 @@
         <Row>
             <Col>
                 <Card>
+                    <p slot="title">商品分类</p>
                     <Table :v-if="refresh" border :columns="columns" :data="category" ref="table"></Table>
                     <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
                 </Card>

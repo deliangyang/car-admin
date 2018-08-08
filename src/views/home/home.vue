@@ -77,7 +77,7 @@
                         ></infor-card>
                     </Col>
                 </Row>
-                <Row>
+                <!-- <Row>
                     <Card :padding="0">
                         <p slot="title" class="card-title">
                             <Icon type="map"></Icon>
@@ -95,7 +95,7 @@
                             </Col>
                         </div>
                     </Card>
-                </Row>
+                </Row> -->
             </Col>
         </Row>
     </div>

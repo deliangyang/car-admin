@@ -23,6 +23,7 @@
             margin-bottom: 10px;
         }
     }
+
 </style>
 <template>
     <div class="product-box">
@@ -59,6 +60,43 @@
                                         </router-link>
                                     </span>
                                 </div>
+                            </FormItem>
+
+                            <FormItem label="封面缩略图">
+                                <div class="demo-upload-list" v-for="(item, key) in defaultProductCoverImage" :key="key">
+                                    <template v-if="item.status === 'finished'">
+                                        <img :src="item.url">
+                                        <div class="demo-upload-list-cover">
+                                            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                                    </template>
+                                </div>
+                                <Upload
+                                    ref="cover"
+                                    name="image"
+                                    :show-upload-list="false"
+                                    :default-file-list="defaultProductCoverImage"
+                                    :on-success="uploadProductCoverImageSuccess"
+                                    :format="['jpg','jpeg','png']"
+                                    :max-size="2048"
+                                    :on-format-error="handleFormatError"
+                                    :on-exceeded-size="handleMaxSize"
+                                    :before-upload="handleBeforeUploadProductCover"
+                                    multiple
+                                    type="drag"
+                                    :action="uploadImageUrl"
+                                    style="display: inline-block;width:58px;">
+                                    <div style="width: 58px;height:58px;line-height: 58px;">
+                                        <Icon type="ios-camera" size="20"></Icon>
+                                    </div>
+                                </Upload>
+                                <Modal title="封面缩略图" v-model="visible">
+                                    <img :src="product.cover" v-if="visible" style="width: 100%">
+                                </Modal>
                             </FormItem>
 
                             <FormItem label="排序" prop="sort">
@@ -107,8 +145,8 @@
         <Row>
             <Col span="24">
             <Card class="product-description">
-                <!-- <p slot="title">商品属性（Sku）</p> -->
-                <Form ref="skuItems" :model="skuItems" :label-width="80">
+                <p slot="title">商品属性（Sku）</p>
+                <Form ref="skuItems" :model="skuItems" >
                     <Row>
                         <Col span="6" v-for="(item, index) in skuItems.items" :key="index" class="sku-item">
                             <FormItem v-if="item.status" :prop="'items.' + index + '.value'" :rules="skuRuleValidate">
@@ -116,8 +154,8 @@
                                     <p slot="title">Sku-{{item.index}}</p>
                                     <p label="sku">
                                         <Select v-model="item.attr_value_id">
-                                            <OptionGroup v-for="(attrName, index) in attrNames" :key="index" :value="index"
-                                                            :label="attrName.name">
+                                            <OptionGroup v-for="(attrName, index) in attrNames" 
+                                                :key="index" :value="index" :label="attrName.name">
                                                 <Option v-for="obj in attrName.attr_values" :value="obj.id" :key="obj.name">
                                                     {{ obj.name }} {{ attrName.unit}}
                                                 </Option>
@@ -237,6 +275,7 @@
                 attrNames: [],
                 attrValues: [],
                 formValidate: {},
+                defaultProductCoverImage: [],
                 skuItems: {
                     items: [
                         {
@@ -344,8 +383,8 @@
             },
             getAttrNames(category, subCategory) {
                 let query = {
-                    category: category,
-                    sub_category: subCategory
+                    // category: category,
+                    // sub_category: subCategory
                 };
                 this.$axios.get('/admin/product/attr', {params: query}).then((res) => {
                     this.attrNames = res.data;
@@ -362,6 +401,16 @@
                     id: 0,
                     src: res.src
                 });
+            },
+            uploadProductCoverImageSuccess (res, file) {
+                file.url = res.src;
+                file.name = res.filename;
+                this.defaultProductCoverImage.push({
+                    name: res.filename,
+                    url: res.src,
+                    status: 'finished'
+                })
+                this.formValidate.cover = res.src
             },
             handleFormatError(file) {
                 this.$Notice.warning({
@@ -380,10 +429,19 @@
                 this.visible = true;
             },
             handleBeforeUpload() {
-                const check = this.formValidate.images.length < 50;
+                const check = this.formValidate.images.length < 5;
                 if (!check) {
                     this.$Notice.warning({
                         title: 'Up to five pictures can be uploaded.'
+                    });
+                }
+                return check;
+            },
+            handleBeforeUploadProductCover () {
+                const check = this.defaultProductCoverImage.length < 1;
+                if (!check) {
+                    this.$Notice.warning({
+                        title: 'Up to one pictures can be uploaded.'
                     });
                 }
                 return check;
@@ -404,8 +462,10 @@
         },
         mounted() {
             this.uploadList = this.$refs.upload.fileList;
+            this.defaultProductCoverImage = this.$refs.cover.fileList
             this.queryAllParentCategory(0);
             this.queryAllParentCategory(this.formValidate.category);
+            this.getAttrNames()
         },
         watch: {},
         created() {
