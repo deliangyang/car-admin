@@ -428,13 +428,14 @@
                 this.visible = true;
             },
             handleBeforeUpload() {
-                const check = this.formValidate.images.length < 5;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: 'Up to five pictures can be uploaded.'
-                    });
-                }
-                return check;
+                return true;
+                // const check = this.formValidate.images.length < 5;
+                // if (!check) {
+                //     this.$Notice.warning({
+                //         title: 'Up to five pictures can be uploaded.'
+                //     });
+                // }
+                // return check;
             },
             handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
