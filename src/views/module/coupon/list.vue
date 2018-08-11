@@ -2,7 +2,7 @@
     <div>
         <Card>
             <p slot="title">优惠券管理</p>
-            <Table border :columns="columns" :data="coupons" ref="table"></Table>
+            <Table border :columns="columns" :data="couponsData" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>    
     </div>
@@ -23,50 +23,60 @@
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80,
                     },
                     {
                         title: '名称',
-                        key: 'name'
+                        key: 'name',
+                        width: 160,
                     },
                     {
                         title: '满',
                         key: 'fill_up',
-                    },
-                    {
-                        title: '总数',
-                        key: 'count',
-                    },
-                    {
-                        title: '库存',
-                        key: 'stock',
-                    },
-                    {
-                        title: '开始时间',
-                        key: 'start_at',
-                    },
-                    {
-                        title: '结束时间',
-                        key: 'expire_at'
-                    },
-                    {
-                        title: '使用范围',
-                        key: 'use_scope',
-                    },
-                    {
-                        title: '使用商品',
-                        key: 'products',
+                        width: 120,
                     },
                     {
                         title: '优惠',
                         key: 'discount',
                         align: 'center',
-                        width: 240,
+                        width: 120,
+                    },
+                    {
+                        title: '总数',
+                        key: 'count',
+                        width: 120,
+                    },
+                    {
+                        title: '库存',
+                        key: 'stock',
+                        width: 120,
+                    },
+                    {
+                        title: '开始时间',
+                        key: 'start_at',
+                        width: 160,
+                    },
+                    {
+                        title: '结束时间',
+                        key: 'expire_at',
+                        width: 160,
+                    },
+                    {
+                        title: '使用范围',
+                        key: 'use_scope',
+                        width: 160,
+                    },
+                    {
+                        title: '使用商品',
+                        key: 'products',
+                        width: 160,
                     },
                     {
                         title: '操作',
                         key: 'action',
                         width: 150,
+                        fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -95,6 +105,15 @@
             this.loadProducts(1);
         },
         computed: {
+            couponsData: function() {
+                return this.coupons.map((element) => {
+                    return {
+                        ...element,
+                        fill_up: 'AU$ ' + (element.fill_up / 100).toFixed(2),
+                        discount: 'AU$ ' + (element.discount / 100).toFixed(2)
+                    }
+                })
+            }
         },
         methods: {
             loadProducts (page) {
@@ -126,7 +145,7 @@
                 this.showImage = imageUrl;
                 this.visible = true;
             },
-        }
+        },
     };
 </script>
 

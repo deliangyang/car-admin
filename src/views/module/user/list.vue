@@ -61,7 +61,8 @@
                     },
                     {
                         title: '昵称',
-                        key: 'name'
+                        key: 'name',
+                        width: 250
                     },
                     {
                         title: '性别',
@@ -125,6 +126,7 @@
                         title: '操作',
                         key: 'action',
                         width: 150,
+                        fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

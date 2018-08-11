@@ -25,7 +25,7 @@
                     {
                         title: '名称',
                         key: 'title',
-                        width: 200,
+                        width: 300,
                         render: (h, params) => {
                             let productName = params.row.product.title
                             let skuName = params.row.sku.name
@@ -43,6 +43,7 @@
                     {
                         title: '用户',
                         key: 'user',
+                        width: 240,
                         render: (h, params) => {
                             return h('div', params.row.user.nickname + ' ' + params.row.user.mobile)
                         }
@@ -61,6 +62,7 @@
                         title: '操作',
                         key: 'action',
                         width: 150,
+                        fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -74,7 +76,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.edit(params.index);
+                                            this.remove(params.index);
                                         }
                                     }
                                 }, '移除')
@@ -114,6 +116,9 @@
             },
             change (page) {
                 this.loadShoppingCart(page);
+            },
+            remove (index) {
+                this.shoppingCart.splice(index, 1)
             }
         }
     };

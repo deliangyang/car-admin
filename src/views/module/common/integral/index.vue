@@ -6,13 +6,7 @@
 <template>
     <div>
         <Card>
-            <p slot="title">
-                <Row>
-                    <Col span="20">
-                        <div>积分等级</div>
-                    </Col>
-                </Row>
-            </p>
+            <p slot="title">积分等级</p>
             <Table border :columns="tableColums" :data="integral" ref="table"></Table>
             <Modal title="View Image" v-model="visible">
                 <img :src="showImage" v-if="visible" class="show-image-box">
@@ -33,11 +27,13 @@ export default {
             tableColums: [
                 {
                     title: '编号',
-                    key: 'id'
+                    key: 'id',
+                    width: 80,
                 },
                 {
                     title: '名称',
-                    key: 'name'
+                    key: 'name',
+                    width: 200,
                 },
                 {
                     title: '积分',
@@ -49,11 +45,13 @@ export default {
                 },
                 {
                     title: '创建于',
-                    key: 'created_at'
+                    key: 'created_at',
+                    width: 160,
                 },
                 {
                     title: '编辑于',
-                    key: 'updated_at'
+                    key: 'updated_at',
+                    width: 160,
                 },
                 {
                     title: '操作',

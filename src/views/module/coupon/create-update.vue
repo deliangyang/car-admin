@@ -68,6 +68,18 @@
 import util from '@/libs/util';
 
 export default {
+    props: {
+        fill_up: Number,
+        discount: Number,
+        count: {
+            type: [String, Number],
+            default: 1,
+        },
+        stock: {
+            type: [String, Number],
+            default: 1,
+        },
+    },
     data () {
         return {
             couponId: 0,
@@ -82,19 +94,15 @@ export default {
                 ],
                 fill_up: [
                     { required: true, message: '满减金额不能为空', trigger: 'blur' },
-                    { type: 'number', message: '满减金额为数字', trigger: 'blur' }
                 ],
                 discount: [
                     { required: true, message: '优惠金额不能为空', trigger: 'blur' },
-                    { type: 'number', message: '优惠金额为数字', trigger: 'blur' }
                 ],
                 count: [
                     { required: true, message: '总数不能为空', trigger: 'blur' },
-                    { type: 'number', message: '总数为数字', trigger: 'blur' }
                 ],
                 stock: [
                     { required: true, message: '库存不能为空', trigger: 'blur' },
-                    { type: 'number', message: '库存为数字', trigger: 'blur' }
                 ],
             },
         }
@@ -129,6 +137,10 @@ export default {
         },
         loadcoupon (id) {
             this.$axios.get('/admin/coupon/' + id).then((res) => {
+                res.data.fill_up = (res.data.fill_up / 100).toFixed(2)
+                res.data.discount = (res.data.discount / 100).toFixed(2)
+                res.data.count = res.data.count + ''
+                res.data.stock = res.data.stock + ''
                 this.coupon = res.data
                 this.validDate = [
                     this.coupon.start_at,
@@ -144,9 +156,13 @@ export default {
     created () {
         let query = this.$route.query
         this.couponId = query.id
-        if (this.couponId > 0) {
-            this.loadcoupon(this.couponId)
-        }
+    },
+    mounted() {
+        this.$nextTick((res) => {
+            if (this.couponId > 0) {
+                this.loadcoupon(this.couponId)
+            }
+        })
     }
 }
 </script>

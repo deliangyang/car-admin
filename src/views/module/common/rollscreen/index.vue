@@ -6,13 +6,7 @@
 <template>
     <div>
         <Card>
-            <p slot="title">
-                <Row>
-                    <Col span="20">
-                        <div>首页轮播图</div>
-                    </Col>
-                </Row>
-            </p>
+            <p slot="title">首页轮播图</p>
             <Table border :columns="tableColums" :data="rollScreen" ref="table"></Table>
             <Modal title="View Image" v-model="visible">
                 <img :src="showImage" v-if="visible" class="show-image-box">
@@ -33,15 +27,18 @@ export default {
             tableColums: [
                 {
                     title: '编号',
-                    key: 'id'
+                    key: 'id',
+                    width: 80,
                 },
                 {
                     title: '名称',
-                    key: 'name'
+                    key: 'name',
+                    width: 300,
                 },
                 {
                     title: '图片',
                     key: 'cover',
+                    width: 80,
                     render: (h, params) => {
                         return h('div', {
                             on: {
@@ -62,15 +59,18 @@ export default {
                 },
                 {
                     title: '排序',
-                    key: 'sort'
+                    key: 'sort',
+                    width: 80,
                 },
                 {
                     title: '创建于',
-                    key: 'created_at'
+                    key: 'created_at',
+                    width: 160,
                 },
                 {
                     title: '编辑于',
-                    key: 'updated_at'
+                    key: 'updated_at',
+                    width: 160,
                 },
                 {
                     title: '操作',

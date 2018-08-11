@@ -99,10 +99,19 @@
                             <FormItem label="排序" prop="sort">
                                 <Input v-model="formValidate.sort" placeholder="排序"></Input>
                             </FormItem>
+                            <FormItem label="标签" prop="tag">
+                                <Input v-model="formValidate.tag" placeholder="标签"></Input>
+                            </FormItem>
                             <FormItem label="是否上架" prop="status">
                                 <RadioGroup v-model="formValidate.status">
                                     <Radio label="0">下架</Radio>
                                     <Radio label="1">上架</Radio>
+                                </RadioGroup>
+                            </FormItem>
+                            <FormItem label="热门商品" prop="is_hot">
+                                <RadioGroup v-model="formValidate.is_hot">
+                                    <Radio label="0">否</Radio>
+                                    <Radio label="1">是</Radio>
                                 </RadioGroup>
                             </FormItem>
                             <FormItem label="快递方式" prop="express_type">
@@ -428,13 +437,14 @@
                 this.visible = true;
             },
             handleBeforeUpload() {
-                const check = this.formValidate.images.length < 5;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: 'Up to five pictures can be uploaded.'
-                    });
-                }
-                return check;
+                return true;
+                // const check = this.formValidate.images.length < 5;
+                // if (!check) {
+                //     this.$Notice.warning({
+                //         title: 'Up to five pictures can be uploaded.'
+                //     });
+                // }
+                // return check;
             },
             handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
@@ -453,10 +463,25 @@
                     this.subCategory = res.data.sub_category
                     delete res.data.sub_category
                     this.formValidate = res.data;
+                    this.formValidate.status = this.formValidate.status + '';
+                    this.formValidate.is_hot = this.formValidate.is_hot + '';
+                    res.data.skus.forEach(element => {
+                        element.amount = (eeamount / 100).toFixed(2)
+                        eevip_amount = (eevip_amount / 100).toFixed(2)
+                        eegold_amount = (eegold_amount / 100).toFixed(2)
+                        eediamond_amount = (eediamond_amount / 100).toFixed(2)
+                        eeplatinum_amount = (eeplatinum_amount / 100).toFixed(2)
+                    });
                     let skus = res.data.skus;
                     let temp, item;
                     this.skuItems.items[0].status = 0;
                     this.formValidate.express_type = [];
+
+                    this.formValidate.amount = (this.formValidate.amount / 100).toFixed(2)
+                    this.formValidate.vip_amount = (this.formValidate.vip_amount / 100).toFixed(2)
+                    this.formValidate.gold_amount = (this.formValidate.gold_amount / 100).toFixed(2)
+                    this.formValidate.diamond_amount = (this.formValidate.diamond_amount / 100).toFixed(2)
+                    this.formValidate.platinum_amount = (this.formValidate.platinum_amount / 100).toFixed(2)
 
                     if (this.formValidate.cover) {
                         this.defaultProductCoverImage.push({

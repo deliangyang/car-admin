@@ -31,11 +31,13 @@ import util from '@/libs/util';
                     },
                     {
                         title: '名称',
-                        key: 'title'
+                        key: 'title',
+                        width: 200,
                     },
                     {
                         title: '简介',
-                        key: 'summary'
+                        key: 'summary',
+                        width: 200
                     },
                     {
                         title: '图片',
@@ -90,6 +92,10 @@ import util from '@/libs/util';
                         key: 'qr_code',
                         width: 120,
                         render: (h, params) => {
+                            if (!params.row.qr_code) {
+                                return h('div', '正在生成中');
+                            }
+
                             return h('img', {
                                 attrs: {
                                     src: util.HOST + '/' + params.row.qr_code
@@ -107,9 +113,23 @@ import util from '@/libs/util';
                         }
                     },
                     {
+                        title: '是否上架',
+                        key: 'status',
+                        width: 100,
+                        render: (h, params) => {
+                            let status = params.row.status
+                            let statusText = '下架'
+                            if (status === 1) {
+                                statusText = '上架'
+                            }
+                            return h('span', statusText)
+                        }
+                    },
+                    {
                         title: '操作',
                         key: 'action',
                         width: 150,
+                        fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

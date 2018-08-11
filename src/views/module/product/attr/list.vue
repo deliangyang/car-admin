@@ -1,14 +1,10 @@
 <template>
     <div>
-        <Row>
-            <Col>
-                <Card>
-                    <p slot="title">Sku</p>
-                    <Table border :columns="columns" :data="skuValues" ref="table"></Table>
-                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-                </Card>
-            </Col>
-        </Row>
+        <Card>
+            <p slot="title">Sku</p>
+            <Table border :columns="columns" :data="skuValues" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        </Card>
     </div>
 </template>
 
@@ -30,12 +26,12 @@
                     {
                         title: '名称',
                         key: 'name',
-                        width: 80
+                        width: 160
                     },
                     {
                         title: '父分类',
                         key: 'category',
-                        width: 80,
+                        width: 160,
                         render: (h, params) => {
                             return h('div', [
                                 h('span', params.row.category.name)
@@ -45,7 +41,7 @@
                     {
                         title: '子分类',
                         key: 'sub_category',
-                        width: 80,
+                        width: 160,
                         render: (h, params) => {
                             return h('div', [
                                 h('span', params.row.sub_category.name)
@@ -58,8 +54,9 @@
                         width: 80
                     },
                     {
-                        title: '属性',
+                        title: '属性（滑动查看全部）',
                         key: 'attr_values',
+                        width: 400,
                         render: (h, params, index) => {
                             let values = []
                             let color = ['blue', 'green', 'red', 'yellow', ]
@@ -82,6 +79,7 @@
                         title: '操作',
                         key: 'action',
                         width: 150,
+                        fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

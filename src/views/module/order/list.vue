@@ -22,6 +22,7 @@
     <div class="order-list">
         <div>
             <Card class="search-box">
+                <p slot="title">订单搜索</p>
                 <Form ref="search" :model="search" :rules="searchRule" inline :label-width="70">
                     <Row>
                         <Col span="6">
@@ -78,8 +79,8 @@
             <Card class="order-item-box">
                 <p slot="title">
                     <Row>
-                        <Col span="4">订单编号：{{item.order_no}}</Col>
-                        <Col span="4" class="order-status">状态：
+                        <Col span="8">订单编号：{{item.order_no}}</Col>
+                        <Col span="8" class="order-status">状态：
                             <span v-if="item.status == -1 || item.status == 0">
                                 订单已关闭
                             </span>
@@ -139,6 +140,7 @@
                     {
                         title: '子订单号',
                         key: 'sub_order_no',
+                        width: 200
                     },
                     {
                         title: 'sku',
