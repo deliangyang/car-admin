@@ -106,7 +106,11 @@
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
-                    console.log(valid, name);
+                    this.foundCircle.extra = [];
+                    this.uploadList.forEach((element) => {
+                        this.foundCircle.extra.push(element.url);
+                    });
+                    console.log(this.foundCircle)
                     if (valid) {
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/found/circle/' + this.primaryId, this.foundCircle).then((res) => {
@@ -122,9 +126,9 @@
                             });
                         }
                         this.$Message.success('操作成功');
-                        this.$router.push({
-                            path: '/found/list'
-                        })
+                        // this.$router.push({
+                        //     path: '/found/list'
+                        // })
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -181,7 +185,7 @@
                 this.$axios.get('/admin/found/circle/' + query.id).then((res) => {
                     this.foundCircle = res.data
                     this.primaryId = query.id;
-                    if (this.foundCircle.type === 2) {
+                    if (this.foundCircle.type === 2 && this.foundCircle.extra.image) {
                         this.foundCircle.extra.image.forEach(element => {
                             this.uploadList.push({
                                 name: '',
@@ -189,7 +193,7 @@
                                 status: 'finished'
                             })
                         });
-                    } else if (this.foundCircle.type === 3) {
+                    } else if (this.foundCircle.type === 3 && this.foundCircle.extra) {
                         this.uploadList.push({
                             name: '',
                             url: this.foundCircle.extra.video,
@@ -197,9 +201,8 @@
                             type: 'video',
                         })
                     }
-                    
                 }).catch((res) => {
-                    this.$Message.error(res);
+                    console.log(res)
                 });
             }
         },

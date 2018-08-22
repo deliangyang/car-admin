@@ -38,16 +38,18 @@
                     },
                     {
                         title: '地址',
-                        key: 'location'
+                        key: 'location',
+                        width: 300,
                     },
                     {
                         title: '街道',
                         key: 'address', 
-                        width: 200        
+                        width: 300        
                     },
                     {
                         title: '详细地址',
-                        key: 'detail'
+                        key: 'detail',
+                        width: 300
                     },
                     {
                         title: '坐标',
@@ -61,13 +63,15 @@
                     },
                     {
                         title: '添加时间',
-                        key: 'created_at'
+                        key: 'created_at',
+                        width: 150
                     },
                     {
                         title: '操作',
                         key: 'action',
                         width: 150,
                         align: 'center',
+                        fixed: 'right',
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {

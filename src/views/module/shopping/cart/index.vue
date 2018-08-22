@@ -25,13 +25,13 @@
                     {
                         title: '名称',
                         key: 'title',
-                        width: 300,
+                        width: 600,
                         render: (h, params) => {
                             let productName = params.row.product.title
                             let skuName = params.row.sku.name
                             let number = params.row.number
                             return h('div', [
-                                h('span', '【' + productName + '】' + skuName + 'x' + number)
+                                h('span', '【' + productName + '】' + skuName + ' x ' + number)
                             ])
                         }
                     },
@@ -39,6 +39,11 @@
                         title: '价格',
                         key: 'amount',
                         width: 140
+                    },
+                    {
+                        title: '数量',
+                        key: 'number',
+                        width: 80
                     },
                     {
                         title: '用户',

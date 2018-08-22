@@ -24,7 +24,9 @@ vueAxios.interceptors.response.use(function (response) {
     console.log(response);
     return response;
 }, function (error) {
-    iView.Message.error(error.response.data.message);
+    if (error.response.data.message.length) {
+        iView.Message.error(error.response.data.message);
+    }
     return Promise.reject(error);
 });
 

@@ -1,23 +1,3 @@
-<style lang="less" scoped>
-.order-list {
-    .order-item-box {
-        margin-bottom: 10px;
-        .total-info {
-            margin-top: 20px;
-        }
-        .order-status {
-            color: red;
-        }
-    }
-    .search-box {
-        margin-bottom: 10px;
-    }
-    .item-splite {
-        text-align: center;
-    }
-}
-</style>
-
 <template>
     <div class="order-list">
         <div>
@@ -100,6 +80,19 @@
                 <Row>
                     <Table border :columns="orderItemColumns" :data="item.items"></Table>
                 </Row>
+                <Row class="order-info">
+                    <Col span="3">买家备注：{{item.remarks || '无'}}</Col>
+                    <Col span="3">支付时间：{{item.payed_at || '无'}}</Col>
+                    <Col span="3">汇率：{{item.rate || '无'}}</Col>
+                    <Col span="3">币种：{{item.currency || '无'}}</Col>
+                    <Col span="3">支付渠道：{{item.channel || '无'}}</Col>                    
+                </Row>
+                <Row class="order-info">
+                    <Col span="3">运费渠道：AU$ {{(item.express_fee / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="3">增值服务：AU$ {{(item.add_value_service / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="3">优惠券：AU$ {{(item.coupon_fee / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="3">总计：AU$ {{(item.total_amount / 100).toFixed(2) || '0.00'}}</Col>
+                </Row>
                 <Row class="total-info">
                     <Col span="2">
                         <Button @click="goToOrderDetailPage(item.id)" type="success">查看详情</Button>
@@ -107,9 +100,9 @@
                     <Col span="2">
                         <Button v-if="item.address > 0" @click="goToOrderDetailPage(item.id)" type="primary">查看快递</Button>
                     </Col>
-                    <Col span="2" v-if="item.status === 1">
+                    <!-- <Col span="2" v-if="item.status === 1">
                         <Button type="error">完成付款</Button>
-                    </Col>
+                    </Col> -->
                 </Row>
             </Card>
         </div>
@@ -135,7 +128,7 @@
                 orderItemColumns: [
                     {
                         title: '商品名称',
-                        key: 'title'
+                        key: 'title',
                     },
                     {
                         title: '子订单号',
@@ -143,12 +136,19 @@
                         width: 200
                     },
                     {
+                        title: '商品编号',
+                        key: 'product_id',
+                        width: 100
+                    },
+                    {
                         title: 'sku',
-                        key: 'sku_id'
+                        key: 'sku_id',
+                        width: 80
                     },
                     {
                         title: '金额(AUD)',
                         key: 'amount',
+                        width: 120,
                         render: (h, params) => {
                             return h('div', 'AU$ ' + (params.row.amount / 100).toFixed(2))
                         }
@@ -156,10 +156,12 @@
                     {
                         title: '数量',
                         key: 'number',
+                        width: 80
                     },
                     {
                         title: '下单时间',
-                        key: 'created_at'
+                        key: 'created_at',
+                        width: 200,
                     }
                 ]
             };
@@ -214,6 +216,25 @@
     };
 </script>
 
-<style scoped>
-
+<style lang="less">
+.order-list {
+    .order-item-box {
+        margin-bottom: 10px;
+        .total-info {
+            margin-top: 20px;
+        }
+        .order-status {
+            color: red;
+        }
+    }
+    .search-box {
+        margin-bottom: 10px;
+    }
+    .item-splite {
+        text-align: center;
+    }
+    .order-info {
+        margin: 5px 0;
+    }
+}
 </style>
