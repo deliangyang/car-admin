@@ -19,10 +19,46 @@
                     <Col span="6">下单时间：{{order.created_at}}</Col>
                     <Col span="6">合计：AU$ <span class="total-amount">{{totalAmont}}</span></Col>
                 </Row>
-                <div>
-                    <Table border :columns="orderItemColumns" :data="orderItems"></Table>
-                </div>
             </p>
+            <div>
+                <Table border :columns="orderItemColumns" :data="orderItems"></Table>
+            </div>
+        </Card>
+        <Card class="mbt-10" v-if="order.add_value_service > 0">
+            <p slot="title">增值服务</p>
+            <FormItem label="增值服务拍照/标记">
+                <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+                    <template v-if="item.status === 'finished'">
+                        <video v-if="item.type==='video'" :src="item.url" style="width:100%;height:100%"></video>
+                        <img v-else :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url, item.name)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    </template>
+                </div>
+                <Upload ref="upload"
+                        name="image"
+                        :show-upload-list="false"
+                        :default-file-list="defaultList"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png',]"
+                        :max-size="2048"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleBeforeUpload"
+                        multiple
+                        type="drag"
+                        :action="uploadImageUrl"
+                        style="display: inline-block;width:58px;">
+                    <div style="width: 58px;height:58px;line-height: 58px;">
+                        <Icon type="camera" size="20"></Icon>
+                    </div>
+                </Upload>
+            </FormItem>
         </Card>
         <Card class="mbt-10">
             <p slot="title">收件人地址</p>
@@ -41,6 +77,7 @@
 </template>
 
 <script>
+import util from '@/libs/util';
 export default {
     data () {
         return {
@@ -116,10 +153,14 @@ export default {
         loadOrderDetail (orderId) {
             this.$axios.get('/admin/order/' + orderId).then((res) => {
                 this.order = res.data
-            }).catch((res) => {
+            });
+        },
+        handleView() {
 
-            })
-        }
+        },
+        handleImageRemove() {
+
+        },
     },
     computed: {
         totalAmont: function() {

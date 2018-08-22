@@ -89,10 +89,10 @@
                             </FormItem>
                             <FormItem label="快递方式" prop="express_type">
                                 <CheckboxGroup v-model="formValidate.express_type">
-                                    <Checkbox value=1 label="不支持混寄"></Checkbox>
-                                    <Checkbox value=2 label="支持混寄"></Checkbox>
-                                    <Checkbox value=3 label="门店自取"></Checkbox>
-                                    <Checkbox value=4 label="墨尔本同城派送"></Checkbox>
+                                    <Checkbox value=1 true-value=1 label="不支持混寄"></Checkbox>
+                                    <Checkbox value=2 true-value=2 label="支持混寄"></Checkbox>
+                                    <Checkbox value=3 true-value=3 label="门店自取"></Checkbox>
+                                    <Checkbox value=4 true-value=4 label="墨尔本同城派送"></Checkbox>
                                 </CheckboxGroup>
                             </FormItem>
 
@@ -301,7 +301,9 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if(valid) {
-                        this.formValidate.items = this.skuItems.items;
+                        this.formValidate.items = this.skuItems.items.filter((element) => {
+                            return element.status > 0;
+                        });
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
                                 this.$Message.success('成功更新商品');

@@ -1,14 +1,10 @@
 <template>
     <div>
-        <Row>
-            <Col>
-                <Card>
-                    <p slot="title">意见反馈</p>
-                    <Table border :columns="columns" :data="feedback" ref="table"></Table>
-                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-                </Card>
-            </Col>
-        </Row>
+        <Card>
+            <p slot="title">意见反馈</p>
+            <Table border :columns="columns" :data="feedback" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        </Card>
     </div>
 </template>
 
@@ -30,7 +26,7 @@
                     {
                         title: '标题',
                         key: 'title',
-                        width: 80
+                        width: 200
                     },
                     {
                         title: '联系方式',
@@ -40,7 +36,7 @@
                     {
                         title: '链接',
                         key: 'url',
-                        width: 200
+                        width: 300
                     },
                     {
                         title: '图片',
@@ -61,12 +57,12 @@
                     },
                     {
                         title: '内容',
-                        key: 'content'
+                        key: 'content',
                     },
                     {
                         title: '留言回复',
                         key: 'remark',
-                        width: 150
+                        width: 200
                     },
                     {
                         title: '操作',
