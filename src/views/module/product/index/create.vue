@@ -72,7 +72,7 @@
                             <FormItem label="排序" prop="sort">
                                 <Input v-model="formValidate.sort" placeholder="排序"></Input>
                             </FormItem>
-                            <FormItem label="标签" prop="tag">
+                            <FormItem label="标签tag" prop="tag">
                                 <Input v-model="formValidate.tag" placeholder="标签"></Input>
                             </FormItem>
                             <FormItem label="是否上架" prop="status">
@@ -89,10 +89,7 @@
                             </FormItem>
                             <FormItem label="快递方式" prop="express_type">
                                 <CheckboxGroup v-model="formValidate.express_type">
-                                    <Checkbox value=1 true-value=1 label="不支持混寄"></Checkbox>
-                                    <Checkbox value=2 true-value=2 label="支持混寄"></Checkbox>
-                                    <Checkbox value=3 true-value=3 label="门店自取"></Checkbox>
-                                    <Checkbox value=4 true-value=4 label="墨尔本同城派送"></Checkbox>
+                                    <Checkbox v-for="(item, key, index) in expressTypes" :key="index" :value="item" true-value=1 :label="key"></Checkbox>
                                 </CheckboxGroup>
                             </FormItem>
 
@@ -113,6 +110,9 @@
                             </FormItem>
                             <FormItem label="钻石会员价格" prop="diamond_amount">
                                 <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
+                            </FormItem>
+                            <FormItem label="税率" prop="tax">
+                                <Input v-model="formValidate.tax" placeholder="税率"></Input>
                             </FormItem>
                         </Col>
                     </Row>
@@ -260,6 +260,12 @@
                 attrNames: [],
                 attrValues: [],
                 formValidate: {},
+                expressTypes: {
+                    '不支持混寄': 1,
+                    '支持混寄': 2,
+                    '门店自取': 3,
+                    '墨尔本同城派送': 4,
+                },
                 defaultProductCoverImage: [],
                 skuItems: {
                     items: [
@@ -294,7 +300,7 @@
                 showImage: '',
                 visible: false,
                 defaultList: [],
-                uploadList: []
+                uploadList: [],
             };
         },
         methods: {
@@ -304,14 +310,15 @@
                         this.formValidate.items = this.skuItems.items.filter((element) => {
                             return element.status > 0;
                         });
+                        let data = this.formValidate;
                         if (this.primaryId > 0) {
-                            this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
+                            this.$axios.put('/admin/products/' + this.primaryId, data).then((res) => {
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
                                 this.$Message.error('更新失败');
                             });
                         } else {
-                            this.$axios.post('/admin/products', this.formValidate).then((res) => {
+                            this.$axios.post('/admin/products', data).then((res) => {
                                     this.$Message.success('Success!');
                                 }).catch((res) => {
                                     this.$Message.error('添加商品失败');
@@ -414,13 +421,6 @@
             },
             handleBeforeUpload() {
                 return true;
-                // const check = this.formValidate.images.length < 5;
-                // if (!check) {
-                //     this.$Notice.warning({
-                //         title: 'Up to five pictures can be uploaded.'
-                //     });
-                // }
-                // return check;
             },
             handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
@@ -451,13 +451,13 @@
                     let skus = res.data.skus;
                     let temp, item;
                     this.skuItems.items[0].status = 0;
-                    this.formValidate.express_type = [];
 
                     this.formValidate.amount = (this.formValidate.amount / 100).toFixed(2)
                     this.formValidate.vip_amount = (this.formValidate.vip_amount / 100).toFixed(2)
                     this.formValidate.gold_amount = (this.formValidate.gold_amount / 100).toFixed(2)
                     this.formValidate.diamond_amount = (this.formValidate.diamond_amount / 100).toFixed(2)
                     this.formValidate.platinum_amount = (this.formValidate.platinum_amount / 100).toFixed(2)
+                    this.formValidate.tax = (this.formValidate.tax / 100).toFixed(2)
 
                     if (this.formValidate.cover) {
                         this.defaultProductCoverImage.push({
