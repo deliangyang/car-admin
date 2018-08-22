@@ -17,8 +17,18 @@ let vueAxios = axios.create({
     baseURL: 'https://xcx.sourcedev.cc/',
     timeout: 1000,
     headers: {}
-})
-Vue.prototype.$axios = vueAxios
+});
+
+vueAxios.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+    console.log(response);
+    return response;
+}, function (error) {
+    iView.Message.error(error.response.data.message);
+    return Promise.reject(error);
+});
+
+Vue.prototype.$axios = vueAxios;
 
 new Vue({
     el: '#app',

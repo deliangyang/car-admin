@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
     <div class="product-attr-box">
         <Card>
@@ -8,11 +5,15 @@
             <Form ref="foundCircle" :model="foundCircle" :rules="ruleValidate" :label-width="80">
                 <Row>
                     <Col span="12">
-                        <FormItem label="内容">
+                        <FormItem label="内容" prop="content">
                             <Input v-model="foundCircle.content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="内容"></Input>
                         </FormItem>
 
-                        <FormItem label="类型">
+                        <FormItem label="发布者Uid" prop="user_id">
+                            <Input v-model="foundCircle.user_id" type="text" :autosize="{minRows: 5,maxRows: 10}" placeholder="发布者Uid"></Input>
+                        </FormItem>
+
+                        <FormItem label="类型" prop="type">
                             <Select v-model="foundCircle.type" style="width:200px" :disabled="!!primaryId">
                                 <Option :value="1">文字</Option>
                                 <Option :value="2">图文</Option>
@@ -20,7 +21,7 @@
                             </Select>
                         </FormItem>
 
-                        <FormItem label="状态">
+                        <FormItem label="状态" prop="status">
                             <Select v-model="foundCircle.status" style="width:200px">
                                 <Option :value="0">禁用</Option>
                                 <Option :value="1">启用</Option>
@@ -98,31 +99,31 @@
                     url: ''
                 },
                 ruleValidate: {
-                    remark: [
-                        { required: true, message: '回复内容不能为空', trigger: 'blur' }
-                    ]
+                    
                 },
             };
         },
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
+                    console.log(valid, name);
                     if (valid) {
-                        let data = {
-                            remark: this.formValidate.remark
-                        }
                         if (this.primaryId > 0) {
-                            this.$axios.put('/admin/found/circle/' + this.primaryId, data).then((res) => {
+                            this.$axios.put('/admin/found/circle/' + this.primaryId, this.foundCircle).then((res) => {
                                 if (res.statusCode === 200) {
                                     this.$Message.success('Success!');
                                 }
                             });
                         } else {
-                           
+                           this.$axios.post('/admin/found/circle', this.foundCircle).then((res) => {
+                                if (res.statusCode === 200) {
+                                    this.$Message.success('Success!');
+                                }
+                            });
                         }
                         this.$Message.success('操作成功');
                         this.$router.push({
-                            path: 'found/list'
+                            path: '/found/list'
                         })
                     } else {
                         this.$Message.error('Fail!');

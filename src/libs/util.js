@@ -23,15 +23,6 @@ util.ajax = axios.create({
     timeout: 30000
 });
 
-axios.interceptors.response.use(function (response) {
-    // 对响应数据做点什么
-    return response;
-}, function (error) {
-// 对响应错误做点什么
-    iview.$Message.error(error.message)
-    return Promise.reject(error);
-});
-
 util.inOf = function (arr, targetArr) {
     let res = true;
     arr.forEach(item => {

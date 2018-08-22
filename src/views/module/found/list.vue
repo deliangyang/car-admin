@@ -2,6 +2,10 @@
     <div>
         <Card>
             <p slot="title">海壳圈管理</p>
+            <a href="/#/found/cicle/create-update" slot="extra">
+                <Icon type="plus-round" ></Icon>
+                添加
+            </a>
             <Table border :columns="columns" :data="foundCircle" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
         </Card>    
@@ -109,7 +113,21 @@
                                             this.edit(params.row.id);
                                         }
                                     }
-                                }, '编辑')
+                                }, '编辑'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.row.id, params.index);
+                                        }
+                                    }
+                                }, '删除')
                             ]);
                         }
                     }
@@ -142,6 +160,12 @@
                     query: {
                         id: id
                     }
+                });
+            },
+            remove (id, index) {
+                this.$axios.delete('/admin/found/circle/' + id).then((res) => {
+                    this.$Message.success('删除成功');
+                    this.foundCircle.splice(index, 1);
                 });
             },
             change (page) {

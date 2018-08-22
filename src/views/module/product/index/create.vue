@@ -1,30 +1,3 @@
-<style lang="less">
-    .product-box {
-        .product-description {
-            margin-top: 10px;
-        }
-        .sku-change-line {
-            width: 43px;
-            height: 10px;
-        }
-        .bottom-button {
-            margin-top: 20px;
-        }
-        .product-category {
-            width: 200px;
-        }
-        .marin-left-33 {
-            margin-left: 33px;
-        }   
-        .sku-item-box {
-            margin: 10px;
-        }
-        .ivu-form-item {
-            margin-bottom: 10px;
-        }
-    }
-
-</style>
 <template>
     <div class="product-box">
         <Row>
@@ -282,6 +255,7 @@
             return {
                 uploadImageUrl: util.imageUploadUrl,
                 index: 1,
+                subCategory: 0,
                 primaryId: 0,
                 attrNames: [],
                 attrValues: [],
@@ -461,16 +435,16 @@
             loadProduct() {
                 this.$axios.get('/admin/products/' + this.primaryId).then((res) => {
                     this.subCategory = res.data.sub_category
-                    delete res.data.sub_category
+                    res.data.sub_category = 0;
                     this.formValidate = res.data;
                     this.formValidate.status = this.formValidate.status + '';
                     this.formValidate.is_hot = this.formValidate.is_hot + '';
                     res.data.skus.forEach(element => {
-                        element.amount = (eeamount / 100).toFixed(2)
-                        eevip_amount = (eevip_amount / 100).toFixed(2)
-                        eegold_amount = (eegold_amount / 100).toFixed(2)
-                        eediamond_amount = (eediamond_amount / 100).toFixed(2)
-                        eeplatinum_amount = (eeplatinum_amount / 100).toFixed(2)
+                        element.amount = (element.amount / 100).toFixed(2)
+                        element.evip_amount = (element.vip_amount / 100).toFixed(2)
+                        element.gold_amount = (element.gold_amount / 100).toFixed(2)
+                        element.diamond_amount = (element.diamond_amount / 100).toFixed(2)
+                        element.platinum_amount = (element.platinum_amount / 100).toFixed(2)
                     });
                     let skus = res.data.skus;
                     let temp, item;
@@ -533,3 +507,31 @@
         }
     };
 </script>
+
+<style lang="less">
+    .product-box {
+        .product-description {
+            margin-top: 10px;
+        }
+        .sku-change-line {
+            width: 43px;
+            height: 10px;
+        }
+        .bottom-button {
+            margin-top: 20px;
+        }
+        .product-category {
+            width: 200px;
+        }
+        .marin-left-33 {
+            margin-left: 33px;
+        }   
+        .sku-item-box {
+            margin: 10px;
+        }
+        .ivu-form-item {
+            margin-bottom: 10px;
+        }
+    }
+
+</style>
