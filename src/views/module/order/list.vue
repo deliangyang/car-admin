@@ -18,12 +18,12 @@
                         <Col span="6">
                             <FormItem label="订单状态" style="width:100%;">
                                 <Select v-model="search.status">
-                                    <Option value="beijing">订单关闭</Option>
-                                    <Option value="shanghai">等待用户支付</Option>
-                                    <Option value="shenzhen">已支付</Option>
-                                    <Option value="shenzhen">已发货</Option>
-                                    <Option value="shenzhen">已收货</Option>
-                                    <Option value="shenzhen">已评价</Option>
+                                    <Option value="all">全部</Option>
+                                    <Option value="unpay">待付款</Option>
+                                    <Option value="waitDelivery">待发货</Option>
+                                    <Option value="delivery">已发货</Option>
+                                    <Option value="finished">已完成</Option>
+                                    <Option value="waitComment">待评价</Option>
                                 </Select>
                             </FormItem>
                         </col>
@@ -81,17 +81,17 @@
                     <Table border :columns="orderItemColumns" :data="item.items"></Table>
                 </Row>
                 <Row class="order-info">
-                    <Col span="3">买家备注：{{item.remarks || '无'}}</Col>
-                    <Col span="3">支付时间：{{item.payed_at || '无'}}</Col>
-                    <Col span="3">汇率：{{item.rate || '无'}}</Col>
-                    <Col span="3">币种：{{item.currency || '无'}}</Col>
-                    <Col span="3">支付渠道：{{item.channel || '无'}}</Col>                    
+                    <Col span="6">买家备注：{{item.remarks || '无'}}</Col>
+                    <Col span="6">支付时间：{{item.payed_at || '无'}}</Col>
+                    <Col span="4">汇率：{{item.rate || '无'}}</Col>
+                    <Col span="4">币种：{{item.currency || '无'}}</Col>
+                    <Col span="4">支付渠道：{{item.channel || '无'}}</Col>                    
                 </Row>
                 <Row class="order-info">
-                    <Col span="3">运费渠道：AU$ {{(item.express_fee / 100).toFixed(2) || '0.00'}}</Col>
-                    <Col span="3">增值服务：AU$ {{(item.add_value_service / 100).toFixed(2) || '0.00'}}</Col>
-                    <Col span="3">优惠券：AU$ {{(item.coupon_fee / 100).toFixed(2) || '0.00'}}</Col>
-                    <Col span="3">总计：AU$ {{(item.total_amount / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="6">运费渠道：AU$ {{(item.express_fee / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="6">增值服务：AU$ {{(item.add_value_service / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="6">优惠券：AU$ {{(item.coupon_fee / 100).toFixed(2) || '0.00'}}</Col>
+                    <Col span="6">总计：AU$ {{(item.total_amount / 100).toFixed(2) || '0.00'}}</Col>
                 </Row>
                 <Row class="total-info">
                     <Col span="2">
@@ -99,6 +99,9 @@
                     </Col>
                     <Col span="2">
                         <Button v-if="item.address > 0" @click="goToOrderDetailPage(item.id)" type="primary">查看快递</Button>
+                    </Col>
+                    <Col span="2" v-if="item.status === 2">
+                        <Button @click="goToDelivery(index)" type="primary">发货</Button>
                     </Col>
                     <!-- <Col span="2" v-if="item.status === 1">
                         <Button type="error">完成付款</Button>
@@ -115,6 +118,11 @@
         name: 'list',
         data () {
             return {
+                value: '',
+                delivery: {
+
+                },
+                showDelivery:false,
                 search: {
 
                 },
@@ -201,13 +209,51 @@
                 params.page = 1
                 this.getOrderList(params)
             },
-            showUserInfo (index) {
-                // let user = this.user[index].user
-                //  this.$Modal.info({
-                //     title: user.nickname,
-                //     content: `Name：user.nickname<br>：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-                // })
-            }
+            goToDelivery(index) {
+                this.$Modal.confirm({
+                    title: this.orders[index].title + '<br />' + this.orders[index].order_no,
+                    okText: '发货',
+                    onOk: () => {
+                        setTimeout(() => {
+                            this.$Message.info(this.delivery.agent + ' ' + this.delivery.orderNo);
+                        }, 2000);
+                    },
+                    render: (h) => {
+                        return h('div', [
+                            h('Input', {
+                                props: {
+                                    value: this.delivery.agent,
+                                    autofocus: true,
+                                    placeholder: '物流公司'
+                                },
+                                style: {
+                                    margin: '10px 0',
+                                },
+                                on: {
+                                    input: (val) => {
+                                        this.delivery.agent = val;
+                                    }
+                                }
+                            }),
+                            h('Input', {
+                                props: {
+                                    value: this.delivery.orderNo,
+                                    autofocus: true,
+                                    placeholder: '快递单号'
+                                },
+                                style: {
+                                    margin: '10px 0',
+                                },
+                                on: {
+                                    input: (val) => {
+                                        this.delivery.orderNo = val;
+                                    }
+                                }
+                            })
+                        ])
+                    }
+                });
+            },
         },
 
         created () {

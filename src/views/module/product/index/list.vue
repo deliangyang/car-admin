@@ -184,12 +184,12 @@ import util from '@/libs/util';
         },
         computed: {
             newProducts: function() {
-                let tmpProducts = []
-                this.products.forEach(element => {
-                    element.amount = 'AU$ ' + (element.amount / 100).toFixed(2)
-                    tmpProducts.push(element)
+                return this.products.map(element => {
+                    return {
+                        ...element,
+                        amount: 'AU$ ' + (element.amount / 100).toFixed(2),
+                    };
                 });
-                return tmpProducts;
             }
         },
         methods: {
@@ -215,8 +215,7 @@ import util from '@/libs/util';
                 });
             },
             deleteProducts(productId) {
-                this.$axios.delete('/admin/product/' + productId).then((res) => {
-                    this.products.splice(index, 1);
+                this.$axios.delete('/admin/products/' + productId).then((res) => {
                     this.$Message.success('删除成功');
                 });
             },
@@ -225,12 +224,14 @@ import util from '@/libs/util';
             },
             remove(index) {
                 let product = this.products[index];
+                let self = this;
                 this.$Modal.confirm({
                     title: '是否要删除该商品',
                     content: product.title,
                     onOk: function() {
                         let productId = product.id;
-                        this.deleteProducts(productId);
+                        self.products.splice(index, 1);
+                        self.deleteProducts(productId);
                     },
                     onCancel: function() {
                         this.$Message.info('已取消');
