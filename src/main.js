@@ -25,7 +25,11 @@ vueAxios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     if (error.response.data.message.length) {
-        iView.Message.error(error.response.data.message);
+        iView.Message.error({
+            content: error.response.data.message,
+            duration: 5,
+            closable: true
+        });
     }
     return Promise.reject(error);
 });

@@ -36,6 +36,11 @@
                         }
                     },
                     {
+                        title: '商品编号',
+                        key: 'product_id',
+                        width: 100,
+                    },
+                    {
                         title: '价格',
                         key: 'amount',
                         width: 140

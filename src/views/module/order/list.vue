@@ -59,19 +59,16 @@
             <Card class="order-item-box">
                 <p slot="title">
                     <Row>
-                        <Col span="8">订单编号：{{item.order_no}}</Col>
-                        <Col span="8" class="order-status">状态：
-                            <span v-if="item.status == -1 || item.status == 0">
-                                订单已关闭
-                            </span>
-                            <span v-else-if="item.status == 1">
-                                等待买家付款
-                            </span>
-                            <span style="color:green" v-else-if="item.status == 2">
-                                已付款
-                            </span>
+                        <Col span="7">订单编号#{{item.id}}：{{item.order_no}}</Col>
+                        <Col span="4" class="order-status">状态：
+                            <span v-if="item.status == -1 || item.status == 0">订单已关闭</span>
+                            <span v-else-if="item.status == 1">等待买家付款</span>
+                            <span style="color:green" v-else-if="item.status == 2 && !item.delivery_at">已付款</span>
+                            <span style="color:green" v-else-if="item.status == 2 && item.delivery_at">已发货</span>
+                            <span style="color:green" v-else-if="item.status == 4 && item.delivery_at">待评价</span>
+                            <span style="color:green" v-else-if="item.status == 5 && item.delivery_at">已完成</span>
                         </Col>
-                        <Col span="4">
+                        <Col span="7">
                             <a @click="showUserInfo(index)">买家：{{item.user.nickname}}</a>
                         </Col>
                         <Col span="4">联系方式：{{item.user.mobile}}</Col>
@@ -100,8 +97,11 @@
                     <Col span="2">
                         <Button v-if="item.address > 0" @click="goToOrderDetailPage(item.id)" type="primary">查看快递</Button>
                     </Col>
-                    <Col span="2" v-if="item.status === 2">
+                    <Col span="2" v-if="item.status === 2 && !item.delivery_at">
                         <Button @click="goToDelivery(index)" type="primary">发货</Button>
+                    </Col>
+                    <Col span="2" v-if="item.status === 2 && item.delivery_at">
+                        <Button @click="finishedDelivery(index)" type="error">已收到快递</Button>
                     </Col>
                     <!-- <Col span="2" v-if="item.status === 1">
                         <Button type="error">完成付款</Button>
@@ -210,33 +210,56 @@
                 this.getOrderList(params)
             },
             goToDelivery(index) {
+                let order = this.orders[index];
+                this.$axios.get('/admin/order/delivery/' + order.id).then((res) => {
+                    this.delivery.orderNo = res.data.express_no;
+                    this.orders[index].delivery_at = res.data.updated_at;
+                    this.showDeliveryModel(order);
+                });
+            },
+            updateDeliveryExpressNo(expressNo, orderId) {
+                let data = {
+                    orderId: orderId,
+                    expressNo: expressNo,
+                };
+                this.$axios.put('/admin/order/delivery/' + orderId, data).then((res) => {
+                    this.$Message.success('修改成功');
+                });
+            },
+            helpUserFinishedDelivery(orderId, index) {
+                let data = {
+                    target: 'finishedDeliver',
+                };
+                this.$axios.put('/admin/order/' + orderId, data).then((res) => {
+                    this.orders[index].status = res.data.status;
+                    this.$Message.info('已收到快递');
+                });
+            },
+            finishedDelivery(index) {
+                let self = this;
+                let order = this.orders[index];
                 this.$Modal.confirm({
-                    title: this.orders[index].title + '<br />' + this.orders[index].order_no,
+                    title: '确定用户已经收到快递？',
+                    okText: '确定',
+                    onOk: () => {
+                        self.helpUserFinishedDelivery(order.id, index);
+                    },
+                });
+            },
+            showDeliveryModel(order) {
+                let self = this;
+                this.$Modal.confirm({
+                    title: order.title + '<br />' + order.order_no,
                     okText: '发货',
                     onOk: () => {
-                        setTimeout(() => {
-                            this.$Message.info(this.delivery.agent + ' ' + this.delivery.orderNo);
-                        }, 2000);
+                        // 快递单号
+                        self.updateDeliveryExpressNo(this.delivery.orderNo, order.id);
                     },
                     render: (h) => {
                         return h('div', [
                             h('Input', {
                                 props: {
-                                    value: this.delivery.agent,
-                                    autofocus: true,
-                                    placeholder: '物流公司'
-                                },
-                                style: {
-                                    margin: '10px 0',
-                                },
-                                on: {
-                                    input: (val) => {
-                                        this.delivery.agent = val;
-                                    }
-                                }
-                            }),
-                            h('Input', {
-                                props: {
+                                    label: '快递单号',
                                     value: this.delivery.orderNo,
                                     autofocus: true,
                                     placeholder: '快递单号'
@@ -253,7 +276,7 @@
                         ])
                     }
                 });
-            },
+            }
         },
 
         created () {

@@ -58,6 +58,7 @@
                     {
                         title: '内容',
                         key: 'content',
+                        width: 200
                     },
                     {
                         title: '留言回复',
@@ -69,6 +70,7 @@
                         key: 'action',
                         width: 150,
                         align: 'center',
+                        fixed: 'right',
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
