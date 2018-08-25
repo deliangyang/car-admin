@@ -1,20 +1,19 @@
 <template>
     <div>
-        <Row>
-            <Col>
-                <Card>
-                    <p slot="title">商品分类</p>
-                    <Table :v-if="refresh" border :columns="columns" :data="category" ref="table"></Table>
-                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-                </Card>
-            </Col>
-        </Row>
+        <Card>
+            <p slot="title">商品分类</p>
+            <a href="/#/product/category/create-update" slot="extra">
+                <Icon type="plus-round" ></Icon>
+                添加
+            </a>
+            <Table :v-if="refresh" border :columns="columns" :data="category" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        </Card>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'list',
         data () {
             return {
                 category: [],
@@ -49,6 +48,17 @@
                         key: 'sort'
                     },
                     {
+                        title: '是否展示在首页',
+                        key: 'show_home_page',
+                        render: (h, params) => {
+                            var show_home = '否';
+                            if (params.row.show_home_page === 1) {
+                                show_home = '是';
+                            }
+                            return h('div', show_home);
+                        }
+                    },
+                    {
                         title: '状态',
                         key: 'status',
                     },
@@ -80,8 +90,6 @@
             };
         },
         created() {
-            //this.refresh = true
-            this.loadProductCategory(1);
         },
         computed: {},
         methods: {
@@ -112,9 +120,8 @@
             }
         },
         mounted () {
-            this.refresh = false
             this.$nextTick(() => {
-                this.refresh = true
+                this.loadProductCategory(1);
             })
         },
         watch: {

@@ -8,7 +8,10 @@
             </a>
             <Table border :columns="columns" :data="foundCircle" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>    
-        </Card>    
+        </Card>
+        <Modal title="查看图片" v-model="visible">
+            <img :src="showImage" v-if="visible" style="width: 100%">
+        </Modal>
     </div>
 </template>
 
@@ -27,15 +30,17 @@
                 columns: [
                     {
                         title: '编号',
-                        key: 'id'
+                        key: 'id',
+                        width: 80,
                     },
                     {
                         title: '内容',
-                        key: 'content'
+                        key: 'content',
                     },
                     {
                         title: '类型',
                         key: 'type',
+                        width: 100,
                         render: (h, params) => {
                             let type = '文字'
                             if (params.row.type === 2) {
@@ -58,15 +63,21 @@
                                     let images = []
                                     extra.image.forEach(element => {
                                         console.log(element)
-                                        let item = h('Avatar', {
-                                            props: {
-                                                shape: 'square',
-                                                size: 'large',
+                                        let item = h('img', {
+                                            attrs: {
                                                 src: element
                                             },
                                             style: {
-                                                margin: '5px'
+                                                width: '40px',
+                                                height: '40px',
+                                                margin: '5px',
+                                                borderRadius: '5px',
                                             },
+                                            on: {
+                                                click: () => {
+                                                    this.handleView(element)
+                                                }
+                                            }
                                         })
                                         images.push(item)
                                     });
@@ -172,7 +183,6 @@
                 this.loadProducts(page);
             },
             handleView (imageUrl, name) {
-                console.log(imageUrl)
                 this.showImage = imageUrl;
                 this.visible = true;
             },

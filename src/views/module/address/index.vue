@@ -1,14 +1,10 @@
 <template>
     <div>
-        <Row>
-            <Col>
-                <Card>
-                    <p slot="title">地址列表</p>
-                    <Table border :columns="columns" :data="address" ref="table"></Table>
-                    <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
-                </Card>
-            </Col>
-        </Row>
+        <Card>
+            <p slot="title">地址列表</p>
+            <Table border :columns="columns" :data="address" ref="table"></Table>
+            <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
+        </Card>
     </div>
 </template>
 

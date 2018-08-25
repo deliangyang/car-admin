@@ -239,7 +239,6 @@ import util from '@/libs/util';
                 });
             },
             handleView (imageUrl, name) {
-                console.log(imageUrl)
                 this.showImage = imageUrl;
                 this.visible = true;
             },

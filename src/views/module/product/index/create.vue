@@ -17,20 +17,16 @@
 
                             <FormItem label="分类" prop="category">
                                 <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
-                                    <Option value="0">未选择</Option>
+                                    <Option :value=0>未选择</Option>
                                     <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
-                                <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
-                                    <Option value="0">未选择</Option>
+                            </FormItem>
+
+                            <FormItem label="二级分类" prop="sub_category">
+                                <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品二级分类">
+                                    <Option :value=0>未选择</Option>
                                     <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
-                                <div>
-                                    <span>
-                                        <router-link to="/product/category/create-update">
-                                            <Icon type="help-circled"></Icon> 去添加分类？
-                                        </router-link>
-                                    </span>
-                                </div>
                             </FormItem>
                            
                             <FormItem label="封面缩略图">
@@ -100,19 +96,34 @@
                         </Col>
                         <Col span="12">
                             <FormItem label="价格" prop="amount">
-                                <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
+                                <Input v-model="formValidate.amount" placeholder="商品价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="黄金会员价格" prop="gold_amount">
-                                <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格"></Input>
+                                <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="铂金会员价格" prop="platinum_amount">
-                                <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格"></Input>
+                                <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="钻石会员价格" prop="diamond_amount">
-                                <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
+                                <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="税率" prop="tax">
-                                <Input v-model="formValidate.tax" placeholder="税率"></Input>
+                                <Input v-model="formValidate.tax" placeholder="税率">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
+                            </FormItem>
+                            <FormItem label="重量(克)" prop="weight">
+                                <Input v-model="formValidate.weight" placeholder="重量">
+                                    <span slot="append">g</span>
+                                </Input>
                             </FormItem>
                         </Col>
                     </Row>
@@ -142,25 +153,44 @@
                                         </Select>
                                     </p>
                                     <p label="库存">
-                                        <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
+                                        库存
+                                        <Input type="text" v-model="item.stock" placeholder="请输入库存">
+                                        </Input>
                                     </p>
                                     <p label="销量">
-                                        <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
+                                        销量
+                                        <Input type="text" v-model="item.sale" placeholder="请输入销量">
+                                        </Input>
                                     </p>
                                     <p label="优惠">
-                                        <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
+                                        优惠
+                                        <Input type="text" v-model="item.discount" placeholder="请输入优惠">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p label="价格">
-                                        <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
+                                        普通价格
+                                        <Input type="text" v-model="item.amount" placeholder="请输入价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p label="黄金会员价格">
-                                        <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
+                                        黄金会员价格
+                                        <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
-                                    <p label="铂金会员价格">
-                                        <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
-                                    </p>
-                                    <p label="砖石会员价格">
-                                        <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石会员价格"></Input>
+                                    <div>
+                                        铂金会员价格
+                                        <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
+                                    </div>
+                                    <p label="钻石会员价格">
+                                        钻石会员价格
+                                        <Input type="text" v-model="item.diamond_amount" placeholder="请输入钻石会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p>
                                         <Button type="ghost" @click="handleRemove(index)">删除</Button>
@@ -249,7 +279,8 @@
         props: {
             amount: Number,
             vip_amount: Number,
-            gold_amount: Number
+            gold_amount: Number,
+            weight: Number,
         },
         data() {
             return {

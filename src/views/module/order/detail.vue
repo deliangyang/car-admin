@@ -1,23 +1,12 @@
-<style lang="less">
-.mbt-10 {
-    margin-bottom: 10px;
-}
-.order-detail-box {
-    .total-amount {
-        color: red;
-    }
-}
-</style>
-
 <template>
     <div>
         <Card class="order-detail-box mbt-10">
             <p slot="title">
                 <Row>
                     <Col span="6">订单编号：{{order.order_no}}</Col>
-                    <Col span="6">买家：{{order.user.nickname}}</Col>
+                    <Col span="7">买家：{{order.user.nickname}}</Col>
                     <Col span="6">下单时间：{{order.created_at}}</Col>
-                    <Col span="6">合计：AU$ <span class="total-amount">{{totalAmont}}</span></Col>
+                    <Col span="5">合计：AU$ <span class="total-amount">{{totalAmont}}</span></Col>
                 </Row>
             </p>
             <div>
@@ -61,16 +50,26 @@
             </FormItem>
         </Card>
         <Card class="mbt-10">
+            <p slot="title">物流信息</p>
+            <div v-if="order.consignor">
+                <Table border :columns="deliveryAddress" :data="[order.consignor]"></Table>
+            </div>
+        </Card>
+        <Card class="mbt-10">
             <p slot="title">收件人地址</p>
             <Table border :columns="deliveryAddress" :data="[order.delivery_address]"></Table>
         </Card>
         <Card class="mbt-10">
-            <p slot="title">发件人地址</p>
+            <p slot="title">发货人地址</p>
             <div v-if="order.consignor">
                 <Table border :columns="deliveryAddress" :data="[order.consignor]"></Table>
             </div>
-            <div v-else style="text-align:center;">
-                <Button type="success">添加发件人</Button>
+        </Card>
+
+        <Card class="mbt-10">
+            <p slot="title">售后评价</p>
+            <div v-if="order.consignor">
+                <Table border :columns="deliveryAddress" :data="[order.consignor]"></Table>
             </div>
         </Card>
     </div>
@@ -114,26 +113,42 @@ export default {
                 {
                     title: '收件人',
                     key: 'name',
+                    width: 120,
                 },
                 {
                     title: '手机号码',
-                    key: 'mobile', 
+                    key: 'mobile',
+                    width: 120,
+                },
+                {
+                    title: '发货人',
+                    key: 'delivery_user',
+                    width: 120,
+                },
+                {
+                    title: '发货手机号码',
+                    key: 'delivery_mobile',
+                    width: 120, 
                 },
                 {
                     title: '街道',
                     key: 'detail',
+                    width: 300,
                 },
                 {
                     title: '快递商',
                     key: 'express_name',
+                    width: 120,
                 },
                 {
                     title: '快递编号',
                     key: 'express_no',
+                    width: 120,
                 },
                 {
                     title: '更新快递时间',
                     key: 'updated_at',
+                    width: 160,
                 }
             ]
         }
@@ -177,3 +192,15 @@ export default {
     }
 }
 </script>
+
+<style lang="less">
+.mbt-10 {
+    margin-bottom: 10px;
+}
+.order-detail-box {
+    .total-amount {
+        color: red;
+    }
+}
+</style>
+

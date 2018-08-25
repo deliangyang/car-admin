@@ -2,6 +2,10 @@
     <div>
         <Card>
             <p slot="title">Sku</p>
+            <a href="/#/product/attr/create-update" slot="extra">
+                <Icon type="plus-round" ></Icon>
+                添加
+            </a>
             <Table border :columns="columns" :data="skuValues" ref="table"></Table>
             <Page :total="total" :page-size="page_size" :current="current_page" show-total @on-change="change"></Page>
         </Card>

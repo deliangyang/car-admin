@@ -1,40 +1,24 @@
-<style lang="less">
-    .product-attr-box {
-        .add-category-help {
-            margin-left: 20px;
-        }
-        .product-category {
-            width: 150px;
-        }
-        .product-description {
-            margin-top: 20px;
-        }
-        h3 {
-            margin-bottom: 10px;
-        }
-    }
-</style>
 <template>
     <div class="product-attr-box">
         <Row>
             <Col span="11">
                 <Card>
-                    <h3>商品属性</h3>
+                    <p slot="title">商品属性</p>
                     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                        <FormItem label="名称">
+                        <FormItem label="名称" prop="name">
                             <Input v-model="formValidate.name" placeholder="请输商品属性名称"></Input>
                         </FormItem>
-                        <FormItem label="单位">
+                        <FormItem label="单位" prop="unit">
                             <Input v-model="formValidate.unit" placeholder="请输商品属性单位"></Input>
                         </FormItem>
                         <FormItem label="商品分类" prop="category">
                             <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="Select your category">
                                 <Option value="0">未选择</Option>
-                                <Option v-for="(item, index) in categories" :value="item.id">{{item.name}}</Option>
+                                <Option v-for="(item, index) in categories" :key="index" :value="item.id">{{item.name}}</Option>
                             </Select>
                             <Select class="product-category" v-model="formValidate.sub_category" placeholder="Select your category">
                                 <Option value="0">未选择</Option>
-                                <Option v-for="(item, index) in subCategories" :value="item.id">{{item.name}}</Option>
+                                <Option v-for="(item, index) in subCategories" :key="index" :value="item.id">{{item.name}}</Option>
                             </Select>
                             <div>
                                 <div>
@@ -55,7 +39,7 @@
 
             <Col span="11" offset="1">
                 <Card>
-                    <h3>添加属性值</h3>
+                    <p slot="title">添加属性值</p>
                     <Form ref="formValidateAttrValues" :model="formValidate" :label-width="80">
                         <FormItem
                                 v-for="(item, index) in formValidate.items"
@@ -88,7 +72,6 @@
 </template>
 <script>
     export default {
-        name: 'create',
         data () {
             return {
                 primaryId: 0,
@@ -138,9 +121,11 @@
                                 }
                             });
                         }
-                        this.$router.push({
-                            path: '/product/attr/list'
-                        })
+                        setTimeout(() => {
+                            this.$router.push({
+                                path: '/product/attr/list'
+                            })
+                        }, 1000);
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -207,5 +192,19 @@
     };
 </script>
 
-<style>
+<style lang="less">
+    .product-attr-box {
+        .add-category-help {
+            margin-left: 20px;
+        }
+        .product-category {
+            width: 150px;
+        }
+        .product-description {
+            margin-top: 20px;
+        }
+        h3 {
+            margin-bottom: 10px;
+        }
+    }
 </style>
