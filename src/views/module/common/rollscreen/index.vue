@@ -1,12 +1,11 @@
-<style lang="less">
-.show-image-box {
-    width: 100%;
-}
-</style>
 <template>
     <div>
         <Card>
             <p slot="title">首页轮播图</p>
+            <a href="/#/common/rollscreen/create-update" slot="extra">
+                <Icon type="plus-round" ></Icon>
+                添加
+            </a>
             <Table border :columns="tableColums" :data="rollScreen" ref="table"></Table>
             <Modal title="View Image" v-model="visible">
                 <img :src="showImage" v-if="visible" class="show-image-box">
@@ -149,3 +148,9 @@ export default {
     }
 }
 </script>
+
+<style lang="less">
+.show-image-box {
+    width: 100%;
+}
+</style>

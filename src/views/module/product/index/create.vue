@@ -42,18 +42,14 @@
                                         <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                                     </template>
                                 </div>
-                                <Upload
-                                    ref="cover"
-                                    name="image"
-                                    :show-upload-list="false"
+                                <Upload ref="cover" name="image" :show-upload-list="false"
                                     :default-file-list="defaultProductCoverImage"
                                     :on-success="uploadProductCoverImageSuccess"
                                     :format="['jpg','jpeg','png']"
                                     :max-size="2048"
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize"
-                                    multiple
-                                    type="drag"
+                                    multiple type="drag"
                                     :action="uploadImageUrl"
                                     style="display: inline-block;width:58px;">
                                     <div style="width: 58px;height:58px;line-height: 58px;">
@@ -73,19 +69,19 @@
                             </FormItem>
                             <FormItem label="是否上架" prop="status">
                                 <RadioGroup v-model="formValidate.status">
-                                    <Radio label="0">下架</Radio>
-                                    <Radio label="1">上架</Radio>
+                                    <Radio :label=0>下架</Radio>
+                                    <Radio :label=1>上架</Radio>
                                 </RadioGroup>
                             </FormItem>
-                            <FormItem label="热门商品" prop="is_hot">
-                                <RadioGroup v-model="formValidate.is_hot">
-                                    <Radio label="0">否</Radio>
-                                    <Radio label="1">是</Radio>
-                                </RadioGroup>
+                            <FormItem label="活动商品" prop="is_hot">
+                                <CheckboxGroup v-model="formValidate.isHot">
+                                    <Checkbox :label=1>榜单热卖</Checkbox>
+                                    <Checkbox :label=2>限时特惠</Checkbox>
+                                </CheckboxGroup> 
                             </FormItem>
                             <FormItem label="快递方式" prop="express_type">
-                                <CheckboxGroup v-model="formValidate.express_type">
-                                    <Checkbox v-for="(item, key, index) in expressTypes" :key="index" :value="item" true-value=1 :label="key"></Checkbox>
+                                <CheckboxGroup v-model="formValidate.expressType">
+                                    <Checkbox v-for="(item, key, index) in expressTypes" :key="index" :label="item.key">{{item.name}}</Checkbox>
                                 </CheckboxGroup>
                             </FormItem>
 
@@ -127,7 +123,6 @@
                             </FormItem>
                         </Col>
                     </Row>
-
                 </Form>
             </Card>
             </Col>
@@ -271,6 +266,7 @@
     import UEditor from '@/views/module/common/uEditor.vue';
     import skuRuleValidate from '@/validate/product';
     import util from '@/libs/util';
+    import { productExressTypes } from '@/libs/express';
 
     export default {
         components: {
@@ -281,6 +277,9 @@
             vip_amount: Number,
             gold_amount: Number,
             weight: Number,
+            status: Number,
+            is_hot: [Array, Number],
+            express_type: [Array, Number],
         },
         data() {
             return {
@@ -291,12 +290,8 @@
                 attrNames: [],
                 attrValues: [],
                 formValidate: {},
-                expressTypes: {
-                    '不支持混寄': 1,
-                    '支持混寄': 2,
-                    '门店自取': 3,
-                    '墨尔本同城派送': 4,
-                },
+                isHot: [1, 2],
+                expressTypes: productExressTypes,
                 defaultProductCoverImage: [],
                 skuItems: {
                     items: [
@@ -324,7 +319,7 @@
                 subCategories: [],
                 ruleValidate: {
                     title: [
-                        {required: true, message: 'The name cannot be empty', trigger: 'blur'}
+                        {required: true, message: '商品标题不能为空', trigger: 'blur'}
                     ]
                 },
                 skuRuleValidate: skuRuleValidate,
@@ -341,7 +336,15 @@
                         this.formValidate.items = this.skuItems.items.filter((element) => {
                             return element.status > 0;
                         });
-                        let data = this.formValidate;
+                        var data = this.formValidate;
+                        data.is_hot = 0
+                        data.isHot.forEach((element) => {
+                            data.is_hot += element
+                        })
+                        data.express_type = 0
+                        data.expressType.forEach((element) => {
+                            data.express_type += element
+                        })
                         if (this.primaryId > 0) {
                             this.$axios.put('/admin/products/' + this.primaryId, data).then((res) => {
                                 this.$Message.success('成功更新商品');
@@ -469,9 +472,23 @@
                 this.$axios.get('/admin/products/' + this.primaryId).then((res) => {
                     this.subCategory = res.data.sub_category
                     res.data.sub_category = 0;
+                    let isHot = []
+                    this.isHot.forEach((element) => {
+                        if ((element & res.data.is_hot) === element) {
+                            isHot.push(element)
+                        }
+                    });
+                    let expressType = []
+                    this.expressTypes.forEach((element) => {
+                        if ((element.key & res.data.express_type) === element.key) {
+                            expressType.push(element.key)
+                        }
+                    });
                     this.formValidate = res.data;
-                    this.formValidate.status = this.formValidate.status + '';
-                    this.formValidate.is_hot = this.formValidate.is_hot + '';
+                    this.formValidate.status = this.formValidate.status;
+                    this.formValidate.isHot = isHot;
+                    this.formValidate.expressType = expressType;
+                    console.log(this.formValidate);
                     res.data.skus.forEach(element => {
                         element.amount = (element.amount / 100).toFixed(2)
                         element.evip_amount = (element.vip_amount / 100).toFixed(2)
