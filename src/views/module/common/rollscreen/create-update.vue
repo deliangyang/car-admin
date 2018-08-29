@@ -1,6 +1,3 @@
-<style lang="less">
-
-</style>
 <template>
     <div>
         <Card>
@@ -8,11 +5,11 @@
             <Form ref="rollScreen" :model="rollScreen" :validate="ruleValidate" :label-width="80">
                 <Row>
                     <Col span="12">
-                        <FormItem label="名称">
+                        <FormItem label="名称" prop="name">
                             <Input v-model="rollScreen.name" placeholder="名称"></Input>
                         </FormItem>
 
-                        <FormItem label="排序">
+                        <FormItem label="排序" prop="sort">
                             <Input v-model="rollScreen.sort" placeholder="排序"></Input>
                         </FormItem>
 

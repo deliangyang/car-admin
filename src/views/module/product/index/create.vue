@@ -17,20 +17,16 @@
 
                             <FormItem label="分类" prop="category">
                                 <Select class="product-category" @on-change="querySubCategories" v-model="formValidate.category" placeholder="商品分类">
-                                    <Option value="0">未选择</Option>
+                                    <Option :value=0>未选择</Option>
                                     <Option v-for="(item, key) in categories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
-                                <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品子分类">
-                                    <Option value="0">未选择</Option>
+                            </FormItem>
+
+                            <FormItem label="二级分类" prop="sub_category">
+                                <Select class="product-category" @on-change="changeSubCategory" v-model="formValidate.sub_category" placeholder="商品二级分类">
+                                    <Option :value=0>未选择</Option>
                                     <Option v-for="(item, key) in subCategories" :key="key" :value="item.id">{{item.name}}</Option>
                                 </Select>
-                                <div>
-                                    <span>
-                                        <router-link to="/product/category/create-update">
-                                            <Icon type="help-circled"></Icon> 去添加分类？
-                                        </router-link>
-                                    </span>
-                                </div>
                             </FormItem>
                            
                             <FormItem label="封面缩略图">
@@ -46,18 +42,14 @@
                                         <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                                     </template>
                                 </div>
-                                <Upload
-                                    ref="cover"
-                                    name="image"
-                                    :show-upload-list="false"
+                                <Upload ref="cover" name="image" :show-upload-list="false"
                                     :default-file-list="defaultProductCoverImage"
                                     :on-success="uploadProductCoverImageSuccess"
                                     :format="['jpg','jpeg','png']"
                                     :max-size="2048"
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize"
-                                    multiple
-                                    type="drag"
+                                    multiple type="drag"
                                     :action="uploadImageUrl"
                                     style="display: inline-block;width:58px;">
                                     <div style="width: 58px;height:58px;line-height: 58px;">
@@ -79,26 +71,24 @@
                                 <Input v-model="formValidate.sale" placeholder="销量"></Input>
                             </FormItem>
                             <FormItem label="标签" prop="tag">
+
                                 <Input v-model="formValidate.tag" placeholder="标签"></Input>
                             </FormItem>
                             <FormItem label="是否上架" prop="status">
                                 <RadioGroup v-model="formValidate.status">
-                                    <Radio label="0">下架</Radio>
-                                    <Radio label="1">上架</Radio>
+                                    <Radio :label=0>下架</Radio>
+                                    <Radio :label=1>上架</Radio>
                                 </RadioGroup>
                             </FormItem>
-                            <FormItem label="热门商品" prop="is_hot">
-                                <RadioGroup v-model="formValidate.is_hot">
-                                    <Radio label="0">否</Radio>
-                                    <Radio label="1">是</Radio>
-                                </RadioGroup>
+                            <FormItem label="活动商品" prop="is_hot">
+                                <CheckboxGroup v-model="formValidate.isHot">
+                                    <Checkbox :label=1>榜单热卖</Checkbox>
+                                    <Checkbox :label=2>限时特惠</Checkbox>
+                                </CheckboxGroup> 
                             </FormItem>
                             <FormItem label="快递方式" prop="express_type">
-                                <CheckboxGroup v-model="formValidate.express_type">
-                                    <Checkbox value=1 true-value=1 label="不支持混寄"></Checkbox>
-                                    <Checkbox value=2 true-value=2 label="支持混寄"></Checkbox>
-                                    <Checkbox value=3 true-value=3 label="门店自取"></Checkbox>
-                                    <Checkbox value=4 true-value=4 label="墨尔本同城派送"></Checkbox>
+                                <CheckboxGroup v-model="formValidate.expressType">
+                                    <Checkbox v-for="(item, key, index) in expressTypes" :key="index" :label="item.key">{{item.name}}</Checkbox>
                                 </CheckboxGroup>
                             </FormItem>
 
@@ -109,20 +99,37 @@
                         </Col>
                         <Col span="12">
                             <FormItem label="价格" prop="amount">
-                                <Input v-model="formValidate.amount" placeholder="商品价格"></Input>
+                                <Input v-model="formValidate.amount" placeholder="商品价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="黄金会员价格" prop="gold_amount">
-                                <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格"></Input>
+                                <Input v-model="formValidate.gold_amount" placeholder="黄金会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="铂金会员价格" prop="platinum_amount">
-                                <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格"></Input>
+                                <Input v-model="formValidate.platinum_amount" placeholder="铂金会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
                             </FormItem>
                             <FormItem label="钻石会员价格" prop="diamond_amount">
-                                <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格"></Input>
+                                <Input v-model="formValidate.diamond_amount" placeholder="钻石会员价格">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
+                            </FormItem>
+                            <FormItem label="税率" prop="tax">
+                                <Input v-model="formValidate.tax" placeholder="税率">
+                                    <span slot="prepend">AU$</span>
+                                </Input>
+                            </FormItem>
+                            <FormItem label="重量(克)" prop="weight">
+                                <Input v-model="formValidate.weight" placeholder="重量">
+                                    <span slot="append">g</span>
+                                </Input>
                             </FormItem>
                         </Col>
                     </Row>
-
                 </Form>
             </Card>
             </Col>
@@ -148,25 +155,44 @@
                                         </Select>
                                     </p>
                                     <p label="库存">
-                                        <Input type="text" v-model="item.stock" placeholder="请输入库存"></Input>
+                                        库存
+                                        <Input type="text" v-model="item.stock" placeholder="请输入库存">
+                                        </Input>
                                     </p>
                                     <p label="销量">
-                                        <Input type="text" v-model="item.sale" placeholder="请输入销量"></Input>
+                                        销量
+                                        <Input type="text" v-model="item.sale" placeholder="请输入销量">
+                                        </Input>
                                     </p>
                                     <p label="优惠">
-                                        <Input type="text" v-model="item.discount" placeholder="请输入优惠"></Input>
+                                        优惠
+                                        <Input type="text" v-model="item.discount" placeholder="请输入优惠">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p label="价格">
-                                        <Input type="text" v-model="item.amount" placeholder="请输入价格"></Input>
+                                        普通价格
+                                        <Input type="text" v-model="item.amount" placeholder="请输入价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p label="黄金会员价格">
-                                        <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格"></Input>
+                                        黄金会员价格
+                                        <Input type="text" v-model="item.gold_amount" placeholder="请输入黄金会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
-                                    <p label="铂金会员价格">
-                                        <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格"></Input>
-                                    </p>
-                                    <p label="砖石会员价格">
-                                        <Input type="text" v-model="item.diamond_amount" placeholder="请输入砖石会员价格"></Input>
+                                    <div>
+                                        铂金会员价格
+                                        <Input type="text" v-model="item.platinum_amount" placeholder="请输入铂金会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
+                                    </div>
+                                    <p label="钻石会员价格">
+                                        钻石会员价格
+                                        <Input type="text" v-model="item.diamond_amount" placeholder="请输入钻石会员价格">
+                                            <span slot="prepend">AU$</span>
+                                        </Input>
                                     </p>
                                     <p>
                                         <Button type="ghost" @click="handleRemove(index)">删除</Button>
@@ -247,6 +273,7 @@
     import UEditor from '@/views/module/common/uEditor.vue';
     import skuRuleValidate from '@/validate/product';
     import util from '@/libs/util';
+    import { productExressTypes } from '@/libs/express';
 
     export default {
         components: {
@@ -255,7 +282,11 @@
         props: {
             amount: Number,
             vip_amount: Number,
-            gold_amount: Number
+            gold_amount: Number,
+            weight: Number,
+            status: Number,
+            is_hot: [Array, Number],
+            express_type: [Array, Number],
         },
         data() {
             return {
@@ -266,6 +297,8 @@
                 attrNames: [],
                 attrValues: [],
                 formValidate: {},
+                isHot: [1, 2],
+                expressTypes: productExressTypes,
                 defaultProductCoverImage: [],
                 skuItems: {
                     items: [
@@ -293,14 +326,14 @@
                 subCategories: [],
                 ruleValidate: {
                     title: [
-                        {required: true, message: 'The name cannot be empty', trigger: 'blur'}
+                        {required: true, message: '商品标题不能为空', trigger: 'blur'}
                     ]
                 },
                 skuRuleValidate: skuRuleValidate,
                 showImage: '',
                 visible: false,
                 defaultList: [],
-                uploadList: []
+                uploadList: [],
             };
         },
         methods: {
@@ -310,14 +343,23 @@
                         this.formValidate.items = this.skuItems.items.filter((element) => {
                             return element.status > 0;
                         });
+                        var data = this.formValidate;
+                        data.is_hot = 0
+                        data.isHot.forEach((element) => {
+                            data.is_hot += element
+                        })
+                        data.express_type = 0
+                        data.expressType.forEach((element) => {
+                            data.express_type += element
+                        })
                         if (this.primaryId > 0) {
-                            this.$axios.put('/admin/products/' + this.primaryId, this.formValidate).then((res) => {
+                            this.$axios.put('/admin/products/' + this.primaryId, data).then((res) => {
                                 this.$Message.success('成功更新商品');
                             }).catch((res) => {
                                 this.$Message.error('更新失败');
                             });
                         } else {
-                            this.$axios.post('/admin/products', this.formValidate).then((res) => {
+                            this.$axios.post('/admin/products', data).then((res) => {
                                     this.$Message.success('Success!');
                                 }).catch((res) => {
                                     this.$Message.error('添加商品失败');
@@ -420,13 +462,6 @@
             },
             handleBeforeUpload() {
                 return true;
-                // const check = this.formValidate.images.length < 5;
-                // if (!check) {
-                //     this.$Notice.warning({
-                //         title: 'Up to five pictures can be uploaded.'
-                //     });
-                // }
-                // return check;
             },
             handleImageRemove(file) {
                 const fileList = this.$refs.upload.fileList;
@@ -444,9 +479,23 @@
                 this.$axios.get('/admin/products/' + this.primaryId).then((res) => {
                     this.subCategory = res.data.sub_category
                     res.data.sub_category = 0;
+                    let isHot = []
+                    this.isHot.forEach((element) => {
+                        if ((element & res.data.is_hot) === element) {
+                            isHot.push(element)
+                        }
+                    });
+                    let expressType = []
+                    this.expressTypes.forEach((element) => {
+                        if ((element.key & res.data.express_type) === element.key) {
+                            expressType.push(element.key)
+                        }
+                    });
                     this.formValidate = res.data;
-                    this.formValidate.status = this.formValidate.status + '';
-                    this.formValidate.is_hot = this.formValidate.is_hot + '';
+                    this.formValidate.status = this.formValidate.status;
+                    this.formValidate.isHot = isHot;
+                    this.formValidate.expressType = expressType;
+                    console.log(this.formValidate);
                     res.data.skus.forEach(element => {
                         element.amount = (element.amount / 100).toFixed(2)
                         element.evip_amount = (element.vip_amount / 100).toFixed(2)
@@ -457,13 +506,13 @@
                     let skus = res.data.skus;
                     let temp, item;
                     this.skuItems.items[0].status = 0;
-                    this.formValidate.express_type = [];
 
                     this.formValidate.amount = (this.formValidate.amount / 100).toFixed(2)
                     this.formValidate.vip_amount = (this.formValidate.vip_amount / 100).toFixed(2)
                     this.formValidate.gold_amount = (this.formValidate.gold_amount / 100).toFixed(2)
                     this.formValidate.diamond_amount = (this.formValidate.diamond_amount / 100).toFixed(2)
                     this.formValidate.platinum_amount = (this.formValidate.platinum_amount / 100).toFixed(2)
+                    this.formValidate.tax = (this.formValidate.tax / 100).toFixed(2)
 
                     if (this.formValidate.cover) {
                         this.defaultProductCoverImage.push({

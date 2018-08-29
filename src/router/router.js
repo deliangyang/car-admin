@@ -170,14 +170,14 @@ export const appRouter = [
         path: '/found',
         icon: 'social-buffer',
         name: 'found',
-        title: '发现页管理',
+        title: '海壳圈管理',
         component: Main,
         children: [
             {
                 path: 'list',
                 icon: 'compose',
                 name: 'found-list',
-                title: '发现列表',
+                title: '海壳圈',
                 component: () => import('@/views/module/found/list.vue')
             },
         ]

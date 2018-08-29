@@ -44,11 +44,11 @@ import util from '@/libs/util';
                         key: 'images',
                         width: 120,
                         render: (h, params) => {
-                            if (params.row.image) {
+                            if (params.row.cover) {
                                 return h('div', [
                                     h('img', {
                                         attrs: {
-                                            src: params.row.image.src,
+                                            src: params.row.cover,
                                             shape: 'square',
                                             icon: 'person',
                                             size: 'large'
@@ -59,7 +59,7 @@ import util from '@/libs/util';
                                         },
                                         on: {
                                             click: () => {
-                                                this.handleView(params.row.image.src)
+                                                this.handleView(params.row.cover)
                                             }
                                         }
                                     })
@@ -128,7 +128,7 @@ import util from '@/libs/util';
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 240,
                         fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
@@ -152,12 +152,26 @@ import util from '@/libs/util';
                                         type: 'error',
                                         size: 'small'
                                     },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
                                     on: {
                                         click: () => {
                                             this.edit(params.index);
                                         }
                                     }
-                                }, '热门')
+                                }, '热门'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index);
+                                        }
+                                    }
+                                }, '删除')
                             ]);
                         }
                     }
@@ -170,12 +184,12 @@ import util from '@/libs/util';
         },
         computed: {
             newProducts: function() {
-                let tmpProducts = []
-                this.products.forEach(element => {
-                    element.amount = 'AU$ ' + (element.amount / 100).toFixed(2)
-                    tmpProducts.push(element)
+                return this.products.map(element => {
+                    return {
+                        ...element,
+                        amount: 'AU$ ' + (element.amount / 100).toFixed(2),
+                    };
                 });
-                return tmpProducts;
             }
         },
         methods: {
@@ -200,11 +214,31 @@ import util from '@/libs/util';
                     }
                 });
             },
+            deleteProducts(productId) {
+                this.$axios.delete('/admin/products/' + productId).then((res) => {
+                    this.$Message.success('删除成功');
+                });
+            },
             change (page) {
                 this.loadProducts(page);
             },
+            remove(index) {
+                let product = this.products[index];
+                let self = this;
+                this.$Modal.confirm({
+                    title: '是否要删除该商品',
+                    content: product.title,
+                    onOk: function() {
+                        let productId = product.id;
+                        self.products.splice(index, 1);
+                        self.deleteProducts(productId);
+                    },
+                    onCancel: function() {
+                        this.$Message.info('已取消');
+                    }
+                });
+            },
             handleView (imageUrl, name) {
-                console.log(imageUrl)
                 this.showImage = imageUrl;
                 this.visible = true;
             },
