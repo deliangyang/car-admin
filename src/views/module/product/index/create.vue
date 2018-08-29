@@ -72,6 +72,12 @@
                             <FormItem label="排序" prop="sort">
                                 <Input v-model="formValidate.sort" placeholder="排序"></Input>
                             </FormItem>
+                            <FormItem label="库存" prop="stock">
+                                <Input v-model="formValidate.stock" placeholder="库存"></Input>
+                            </FormItem>
+                            <FormItem label="销量" prop="sale">
+                                <Input v-model="formValidate.sale" placeholder="销量"></Input>
+                            </FormItem>
                             <FormItem label="标签" prop="tag">
                                 <Input v-model="formValidate.tag" placeholder="标签"></Input>
                             </FormItem>
